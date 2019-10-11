@@ -1,0 +1,18 @@
+## Interface: 11302
+## Title: BigFoot World Channel Filter
+## Version: 1.0.0
+## Notes: BigFoot World Channel Filter
+## SavedVariablesPerCharacter: BFWC_Filter_SavedConfigs
+## Author: guoyongshi@gmail.com
+## X-License: GPLv3
+
+embeds.xml
+listbox.lua
+macrobtn.lua
+global.lua
+utils.lua
+filter.lua
+config.lua
+minimap.lua
+
+main.lua
