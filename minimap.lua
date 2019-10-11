@@ -1,13 +1,15 @@
 
 local minimap_icon_texture
+local cfgdlg = LibStub("AceConfigDialog-3.0")
 local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("BigFootWorldChannelFilter", {
     type = "data source",
     text = "SpellCastingHelper",
     icon = "Interface\\Icons\\INV_Misc_MissileSmall_Green",
     OnClick = function(self,button)
         if button == 'LeftButton' then
-            LibStub("AceConfigDialog-3.0"):SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
-            LibStub("AceConfigDialog-3.0"):Open("BigFootWorldChannelFilter")
+            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+            cfgdlg:Open("BigFootWorldChannelFilter")
+            cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
         elseif button == 'RightButton' then
             bfwf_toggle_bf_filter()
         end

@@ -466,7 +466,6 @@ local config_options = {
                     end,
                     width = 'full',
                     set = function(info,val)
-                        print(val)
                         last_select_team_leader = val
                     end,
                     get = function(info)
@@ -612,6 +611,27 @@ bfwf_configs_init = function()
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("BigFootWorldChannelFilter", "组队频道过滤")
 end
 
+--[[
+"PARENT"
+"BACKGROUND"
+"LOW"
+"MEDIUM"
+"HIGH"
+"DIALOG"
+"FULLSCREEN"
+"FULLSCREEN_DIALOG"
+"TOOLTIP"
+--]]
 bfwf_toggle_config_dialog = function()
-    LibStub("AceConfigDialog-3.0"):Open("BigFootWorldChannelFilter", configFrame)
+    local cfgdlg = LibStub("AceConfigDialog-3.0")
+    local st = cfgdlg:GetStatusTable('BigFootWorldChannelFilter',{'teamlog1'})
+    for k,v in pairs(st) do
+        print(k,v)
+        for a,b in pairs(v) do
+            print(a,b)
+        end
+    end
+    --cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+    --cfgdlg:Open("BigFootWorldChannelFilter")
+    --cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
 end

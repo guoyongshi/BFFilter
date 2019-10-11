@@ -157,6 +157,7 @@ bfwf_toggle_bf_filter = function()
 end
 
 local cfgreg = LibStub("AceConfigRegistry-3.0")
+local acegui = LibStub("AceGUI-3.0")
 bfwf_update_config_dialog = function()
 	if not dirty then
 		return
@@ -164,6 +165,10 @@ bfwf_update_config_dialog = function()
 	if not cfgreg then
 		return
 	end
+    if acegui.FocusedWidget then
+        print('编辑或选择中',acegui.FocusedWidget.type)
+        return
+    end
 	dirty = false
 	cfgreg:NotifyChange('BigFootWorldChannelFilter')
 end
