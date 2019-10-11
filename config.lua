@@ -424,7 +424,7 @@ local config_options = {
                 desc1 = {
                     order = 1,
                     type = 'description',
-                    name = '最近的喊话组队记录',
+                    name = '最近的组队喊话记录',
                     width = 1
                 },
                 beg = {
@@ -435,6 +435,13 @@ local config_options = {
                     set = function(info,val)
                         BFWC_Filter_SavedConfigs.filter_request_to_join = val
                     end
+                },
+                desc2 = {
+                    order = 1.2,
+                    type = 'description',
+                    name = '|cffff0000您还没加入大脚世界频道，请在“通用设置”里先加入，大部分组队信息都在该频道|r',
+                    hidden=function() return bfwf_big_foot_world_channel_joined  end,
+                    width = 'full'
                 },
 
                 history = {
@@ -467,7 +474,7 @@ local config_options = {
                     end
                 },
 
-                desc2 = {
+                desc3 = {
                     order = 3,
                     type = 'group',
                     name = '将我的等级、职责密给队长',
