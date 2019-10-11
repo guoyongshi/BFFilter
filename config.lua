@@ -108,7 +108,7 @@ local classes = {
     ['WARRIOR']={'战士','战士','战士T'},
 }
 
-function bfwf_myinfo()
+function bfwf_myinfo(d1,d2)
     local info = ''
     info = info .. (UnitLevel("player") or '??') .. '级'
     local class = classes[bfwf_player.class]
@@ -117,7 +117,7 @@ function bfwf_myinfo()
         return info
     end
 
-    local d1 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty
+    --local d1 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty
     if d1=='T' then
         info = info .. class[3]
     elseif d1=='N' then
@@ -126,7 +126,7 @@ function bfwf_myinfo()
         info = info .. class[1]
     end
 
-    local d2 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].second_duty
+    --local d2 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].second_duty
     if not d2 or d2=='X' or d2==d1 then
         return info
     end
@@ -146,7 +146,13 @@ local function whisper_level_duty()
     if not last_select_team_leader then
         return
     end
-    if not BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty then
+
+    local d1 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty
+    local d2 = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].second_duty
+    if bfwf_player.classes == 1 then
+        d1 = 'D'
+    end
+    if not d1 then
         bfwf_msgbox('先选择你的职责')
         return
     end
@@ -156,10 +162,11 @@ local function whisper_level_duty()
         return
     end
 
-    local info = bfwf_myinfo()
+    local info = bfwf_myinfo(d1,d2)
     local msg = '是否将您的信息\n|cffff7eff' .. info .. '|r\n发送给 |cffbb9e75' .. last_select_team_leader.name .. '|r ?'
     bfwf_confirm(msg,nil,nil,function ()
         SendChatMessage(info,"WHISPER", nil,last_select_team_leader.name)
+        last_whisper[last_select_team_leader.id] = GetTime()
     end)
 end
 
@@ -472,7 +479,7 @@ local config_options = {
                             order = 1,
                             values = function ()
                                 if bfwf_player.classes==1 then
-                                    return {['DPS']='DPS'}
+                                    return {['D']='DPS'}
                                 end
 
                                 if bfwf_player.classes==2 then
@@ -491,7 +498,7 @@ local config_options = {
                                 if not bfwf_g_data.myid or not BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid]  then
                                     return 'D'
                                 end
-                                return BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty or 'DPS'
+                                return BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].first_duty or 'D'
                             end,
                             set = function(info,val)
                                 if not bfwf_g_data.myid or not BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid]  then
@@ -508,7 +515,7 @@ local config_options = {
                             order = 2,
                             values = function ()
                                 if bfwf_player.classes==1 then
-                                    return {['X']='无',['DPS']='DPS'}
+                                    return {['X']='无',['D']='DPS'}
                                 end
 
                                 if bfwf_player.classes==2 then
