@@ -4,6 +4,8 @@
 
 有用的组队信息保留下来，并可以一键发送组队申请（自动报等级、职业）
 
+/bff 打开配置窗口，或点小地图上的图标
+
 ![小地图](https://github.com/guoyongshi/BFFilter/raw/master/capture/minimap.jpg)
 
 ![基本设置](https://github.com/guoyongshi/BFFilter/raw/master/capture/gen.jpg)
