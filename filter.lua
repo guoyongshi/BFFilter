@@ -166,7 +166,6 @@ bfwf_update_config_dialog = function()
 		return
 	end
     if acegui.FocusedWidget then
-        print('编辑或选择中',acegui.FocusedWidget.type)
         return
     end
 	dirty = false

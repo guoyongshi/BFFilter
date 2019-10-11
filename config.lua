@@ -624,14 +624,7 @@ end
 --]]
 bfwf_toggle_config_dialog = function()
     local cfgdlg = LibStub("AceConfigDialog-3.0")
-    local st = cfgdlg:GetStatusTable('BigFootWorldChannelFilter',{'teamlog1'})
-    for k,v in pairs(st) do
-        print(k,v)
-        for a,b in pairs(v) do
-            print(a,b)
-        end
-    end
-    --cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
-    --cfgdlg:Open("BigFootWorldChannelFilter")
-    --cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+    cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+    cfgdlg:Open("BigFootWorldChannelFilter")
+    cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
 end
