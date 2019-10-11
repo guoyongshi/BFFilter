@@ -153,8 +153,9 @@ local function whisper_level_duty()
         d1 = 'D'
     end
     if not d1 then
-        bfwf_msgbox('先选择你的职责')
-        return
+        d1 = 'D'
+        --bfwf_msgbox('先选择你的职责')
+        --return
     end
     local dt = GetTime()-(last_whisper[last_select_team_leader.id] or 0)
     if dt < 60 then
