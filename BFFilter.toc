@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Title: BigFoot World Channel Filter
-## Version: 1.0.4
+## Version: 1.0.5
 ## Notes: BigFoot World Channel Filter
 ## SavedVariablesPerCharacter: BFWC_Filter_SavedConfigs
 ## Author: guoyongshi@gmail.com

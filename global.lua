@@ -33,8 +33,6 @@ bfwf_dungeons = {
 }
 
 bfwf_player = {}
-bfwf_count = 0
-bfwf_black_count = 0
 
 bfwf_configs_init = function() end
 bfwf_update_minimap_icon = function() end

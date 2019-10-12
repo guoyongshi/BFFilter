@@ -6,17 +6,37 @@ if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 local CreateFrame, UIParent = CreateFrame, UIParent
 local create_listbox_item
 
+BFWC_ListBoxs = {}
 local methods = {
 
     ["OnAcquire"] = function(self)
         self:superOnAcquire()
         self:SetDisabled(false)
         self:SetCallback('OnItemSelected',self.OnItemSelected)
+        local found = false
+        for _,o in ipairs(BFWC_ListBoxs) do
+            if o == self then
+                found = true
+            end
+        end
+
+        if not found then
+            table.insert(BFWC_ListBoxs,self)
+        end
+    end,
+
+    ['OnRelease'] = function(self)
+        for i=#BFWC_ListBoxs,1,-1 do
+            if BFWC_ListBoxs[i] == self then
+                table.remove(BFWC_ListBoxs,i)
+            end
+        end
     end,
 
     ['SetDisabled'] = function(self,dis)
 
     end,
+
     ['SetValue'] = function(self,val)
 
     end,
@@ -34,8 +54,7 @@ local methods = {
         --self.scrollbar:SetValue(500)
     end,
     ['SetLabel'] = function(self,label)
-        if label and label ~= '' then
-        end
+        self.name = label
     end,
     ['AddChild'] = function(self,child,beforeWidget)
 

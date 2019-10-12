@@ -15,7 +15,8 @@ local function blacklist_init()
 
     BFWC_Filter_SavedConfigs.blacklist_enable = true
     BFWC_Filter_SavedConfigs.blacklist = {
-        '/组','一组','邮寄','大量','带价','代价','位面','老板','支付'
+        '/组','一组','邮寄','大量','带价','代价','位面','老板','支付',
+        'VX','免费','ZFB'
     }
 end
 
@@ -177,11 +178,25 @@ local config_options = {
     type = 'group',
     name = '组队频道信息过滤器',
     args = {
+        desc = {
+            type = 'group',
+            name = '说明',
+            order = 1,
+            args ={
+                desc1 = {
+                    type = 'description',
+                    name = '|cffbb9e75从v1.0.5开始，为了避免重复造轮子，插件功能以【组队助手】为主，\n\n信息过滤仅作为辅助功能\n\n' ..
+                '黑名单的信息会从【大脚世界频道】和【寻求组队】这两个频道过滤掉。\n\n' ..
+                '白名单信息(包括选中的副本)会从这两个频道提取到【我要找队伍】的列表里\n\n' ..
+                '玩家如果需要频道信息过滤功能，可以用其他频道信息过滤插件。|r',
+                    order = 1,
+                },
+            }
+        },
         common = {
             type = 'group',
             name = '通用设置',
-            order = 1,
-            width = 0.5,
+            order = 1.1,
             args = {
                 reset = {
                     type = 'execute',
@@ -222,18 +237,6 @@ local config_options = {
                     order = 4,
                 },
 
-                desc2 = {
-                    type = 'description',
-                    name = '\n' ..
-                            '将大脚世界频道有用的组队信息保留下来,其它信息全部过滤掉！\n\n' ..
-                            '即：只显示包含白名单关键词的信息。同时包含黑白关键词的会被过滤掉。\n\n' ..
-                            '注意：本插件会过滤掉大脚世界频道的大部分信息，有可能包括您想看到的信息，比如闲聊，请谨慎使用。\n' ..
-                            '\n'
-                ,
-                    width = 'full',
-                    order = 4.1
-                },
-
                 autojoin = {
                     type = 'toggle',
                     name = '自动加入大脚世界频道',
@@ -246,6 +249,7 @@ local config_options = {
                         BFWC_Filter_SavedConfigs.autojoin_bigfoot = val
                     end
                 },
+
                 enable = {
                     type = 'toggle',
                     name = '启用过滤器',
@@ -393,7 +397,7 @@ local config_options = {
                 },
                 editor = {
                     type = 'input',
-                    name = '自定义关键词(用英文逗号分隔)',
+                    name = '自定义组队信息关键词(用英文逗号分隔)',
                     multiline = true,
                     usage = '关键词之间用英文逗号分隔，不要回车',
                     width = 'full',
@@ -580,6 +584,20 @@ local config_options = {
                         }
                     }
                 }
+            }
+        },
+
+        organize = {
+            type = 'group',
+            name = '我要组队',
+            order = 5,
+            width = 'full',
+            args = {
+                desc1 = {
+                    type = 'description',
+                    name = '|cffbb9e75 敬请期待 |r',
+                    order = 1,
+                },
             }
         }
     }
