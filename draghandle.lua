@@ -130,6 +130,7 @@ local hdl = setmetatable(CreateFrame('Frame','BFWFDragHandle',UIParent),draghand
 hdl:SetScript('OnHide',onHide)
 hdl:Init()
 hdl:SetPoint('TOPRIGHT',-150,-150)
+hdl:Hide()
 
 bfwf_show_drag_handle = function()
     hdl:Show()
