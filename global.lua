@@ -46,6 +46,15 @@ bfwf_toggle_config_dialog = function() end
 bfwf_update_config_dialog = function() end
 bfwf_update_dungeons_filter = function() end
 
+bfwf_show_drag_handle = function() end
+bfwf_hide_drag_handle = function() end
+bfwf_update_drag_handle = function() end
+
+bfwf_update_icon = function()
+    bfwf_update_drag_handle()
+    bfwf_update_minimap_icon()
+end
+
 bfwf_chat_team_log = {}
 bfwf_chat_task_log = {}
 

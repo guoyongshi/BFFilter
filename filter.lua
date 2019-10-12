@@ -148,12 +148,12 @@ end
 
 bfwf_chat_filter_init = function()
     ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', chat_message_filter)
-    bfwf_update_minimap_icon()
+    bfwf_update_icon()
 end
 
 bfwf_toggle_bf_filter = function()
     BFWC_Filter_SavedConfigs.enable = not BFWC_Filter_SavedConfigs.enable
-    bfwf_update_minimap_icon()
+    bfwf_update_icon()
 end
 
 local cfgreg = LibStub("AceConfigRegistry-3.0")

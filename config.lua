@@ -38,6 +38,7 @@ local function reset_configs()
         hide_enter_leave = true,
         auto_filter_by_level = true,
         filter_request_to_join = true,
+        autojoin_bigfoot = true,
         minimap = { hide = false},
     }
     dungeons_init()
@@ -213,13 +214,15 @@ local config_options = {
                     dialogControl = 'MacroButton'
                 },
 
-                desc = {
+                desc1 = {
                     type = 'description',
-                    name = '\n|cffcc0000您现在还未加入|r|cfffed51f大脚世界频道|r|cffcc0000，请先加入!|r\n',
-                    hidden = function() return not bfwf_big_foot_world_channel_joined end
+                    name = '\n|cffcc0000您现在还未加入|r|cfffed51f大脚世界频道|r|cffcc0000，加入后才能看到大量组队信息!!!|r\n',
+                    hidden = function() return bfwf_big_foot_world_channel_joined end,
+                    width = 'full',
+                    order = 4,
                 },
 
-                desc = {
+                desc2 = {
                     type = 'description',
                     name = '\n' ..
                             '将大脚世界频道有用的组队信息保留下来,其它信息全部过滤掉！\n\n' ..
@@ -228,7 +231,7 @@ local config_options = {
                             '\n'
                 ,
                     width = 'full',
-                    order = 4
+                    order = 4.1
                 },
 
                 autojoin = {
@@ -253,7 +256,7 @@ local config_options = {
                     end,
                     set = function(info, val)
                         BFWC_Filter_SavedConfigs.enable = val
-                        bfwf_update_minimap_icon()
+                        bfwf_update_icon()
                     end
                 },
 
@@ -288,6 +291,22 @@ local config_options = {
                     end,
                     get = function(info)
                         return not BFWC_Filter_SavedConfigs.minimap.hide
+                    end
+                },
+
+                draghdl = {
+                    type = 'toggle',
+                    name = '显示全局可拖拽按钮(在一些整合UI里，小地图按钮不好找，可以用这个)\n',
+                    order = 9.1,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.show_drag_handle end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.show_drag_handle = val
+                        if val then
+                            bfwf_show_drag_handle()
+                        else
+                            bfwf_hide_drag_handle()
+                        end
                     end
                 },
 

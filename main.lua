@@ -44,6 +44,10 @@ function BFFilter:OnEnable()
     update_player_info()
 
     self:OnLevelUp()
+
+    if BFWC_Filter_SavedConfigs.show_drag_handle then
+        bfwf_show_drag_handle()
+    end
 end
 
 function BFFilter:OnDisable()
