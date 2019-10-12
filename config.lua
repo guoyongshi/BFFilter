@@ -492,6 +492,10 @@ local config_options = {
                         last_select_team_leader = val
                     end,
                     get = function(info)
+                        if last_select_team_leader and (GetTime()-last_select_team_leader.time)>180 then
+                            last_select_team_leader = nil
+                            return nil
+                        end
                         return last_select_team_leader
                     end
                 },
