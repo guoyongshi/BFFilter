@@ -76,15 +76,6 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         end
     end
 
-    if BFWC_Filter_SavedConfigs.whitelist_enable then
-        for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
-            local lk = string.lower(k)
-            if lk:len()>0 and string.find(lmessage,lk) then
-                return false
-            end
-        end
-    end
-
     for _,d in ipairs(bfwf_dungeons) do
         if BFWC_Filter_SavedConfigs.dungeons[d.name] then
             for _,k in ipairs(d.keys) do
@@ -138,6 +129,15 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
                     end
                     return false
                 end
+            end
+        end
+    end
+
+    if BFWC_Filter_SavedConfigs.whitelist_enable then
+        for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
+            local lk = string.lower(k)
+            if lk:len()>0 and string.find(lmessage,lk) then
+                return false
             end
         end
     end
