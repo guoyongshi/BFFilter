@@ -17,11 +17,11 @@ bfwf_dungeons = {
     {name='奥达曼(41 ~ 51)',lmin=41,lmax=51,sel=true,keys={'adm','奥达曼'}},
     {name='祖尔法拉克(42 ~ 46)',lmin=43,lmax=49,sel=true,keys={'zul','祖尔'}},
     {name='玛拉顿(46 ~ 55)',lmin=46,lmax=55,sel=true,keys={'mld','玛拉顿'}},
-    {name='阿塔哈卡神庙(50 ~ 56)',lmin=50,lmax=56,sel=true,keys={'sm','athk','神庙'}},
+    {name='阿塔哈卡神庙(50 ~ 56)',lmin=50,lmax=56,sel=true,keys={'athk','神庙'}},
     {name='黑石深渊(52 ~ 60)',lmin=52,lmax=60,sel=true,keys={'hs','黑石深渊'}},
     {name='黑石塔上/下层(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'hs','黑石塔','黑上','黑下','黑石上','黑石下'}},
     {name='厄运之槌(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'ey','厄运'}},
-    {name='通灵学院(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'tlxy','通灵','学院'}},
+    {name='通灵学院(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'tl','通灵','学院'}},
     {name='斯坦索姆(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'stsm','斯坦'}},
 
     {name='祖尔格拉布(团)',lmin=60,lmax=60,sel=false,keys={'zg','祖格'}},

@@ -188,7 +188,8 @@ local config_options = {
                     name = '|cffbb9e75从v1.0.5开始，为了避免重复造轮子，插件功能以【组队助手】为主，\n\n信息过滤仅作为辅助功能\n\n' ..
                 '黑名单的信息会从【大脚世界频道】和【寻求组队】这两个频道过滤掉。\n\n' ..
                 '白名单信息(包括选中的副本)会从这两个频道提取到【我要找队伍】的列表里\n\n' ..
-                '玩家如果需要频道信息过滤功能，可以用其他频道信息过滤插件。|r',
+                '玩家如果需要频道信息过滤功能，可以用其他频道信息过滤插件。|r\n\n' ..
+                '副本关键词及建议等级不一定准确，欢迎到\n\nhttps://github.com/guoyongshi/BFFilter 或者NGA(maliangys)给我反馈。',
                     order = 1,
                 },
             }
@@ -479,7 +480,7 @@ local config_options = {
                             local dt = GetTime()-m.time
                             if dt < 180 then
                                 local text = '[|cff3ee157' .. bfwf_format_time(dt)
-                                text = text .. '|r |cffbb9e75' .. m.name .. '|r ] '
+                                text = text .. '|r |cff11d72a' .. m.name .. '|r ] '
                                 text = text .. '|cffb3f0e7' .. m.text ..'|r'
                                 --arr[#arr+1] = { text = text,id = m.playerid}
                                 arr[#arr+1] = {text = text,id = m.playerid,name=m.fullname,time=m.time}

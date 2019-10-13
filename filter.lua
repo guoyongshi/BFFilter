@@ -10,7 +10,7 @@ end
 
 local dirty = false
 
-local function add_msg_to_team_log(line,message,playerguid,fullname,shortname)
+local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
     local add_to_log = true
     for _,m in ipairs(bfwf_chat_team_log) do
         if m.line == line then
@@ -129,7 +129,7 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
             for _,k in ipairs(d.keys) do
                 local lk = string.lower(k)
                 if lk:len()>0 and string.find(lmessage,lk) then
-                    add_msg_to_team_log(line,message,playerguid,fullname,shortname)
+                    add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
                     return false
                 end
             end
@@ -140,7 +140,7 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
             local lk = string.lower(k)
             if lk:len()>0 and string.find(lmessage,lk) then
-                add_msg_to_team_log(line,message,playerguid,fullname,shortname)
+                add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
                 return false
             end
         end
