@@ -661,9 +661,65 @@ end
 "FULLSCREEN_DIALOG"
 "TOOLTIP"
 --]]
+local cfgdlg = LibStub("AceConfigDialog-3.0")
+local close_button = nil
+local function close_dialog()
+    if cfgdlg then
+        cfgdlg:Close('BigFootWorldChannelFilter')
+    end
+end
+local function create_close_button()
+    if close_button then
+        return
+    end
+
+    if not cfgdlg.OpenFrames or not cfgdlg.OpenFrames['BigFootWorldChannelFilter'] then
+        return
+    end
+
+    local frame = cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame
+
+    local deco = CreateFrame("Frame", nil, frame)
+    deco:SetSize(17, 40)
+
+    local bg1 = deco:CreateTexture(nil, "BACKGROUND")
+    bg1:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+    bg1:SetTexCoord(0.31, 0.67, 0, 0.63)
+    bg1:SetAllPoints(deco)
+
+    local bg2 = deco:CreateTexture(nil, "BACKGROUND")
+    bg2:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+    bg2:SetTexCoord(0.235, 0.275, 0, 0.63)
+    bg2:SetPoint("RIGHT", bg1, "LEFT")
+    bg2:SetSize(10, 40)
+
+    local bg3 = deco:CreateTexture(nil, "BACKGROUND")
+    bg3:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+    bg3:SetTexCoord(0.72, 0.76, 0, 0.63)
+    bg3:SetPoint("LEFT", bg1, "RIGHT")
+    bg3:SetSize(10, 40)
+
+    deco:SetPoint("TOPRIGHT", -30, 12)
+
+    close_button = CreateFrame("BUTTON", nil, deco, "UIPanelCloseButton")
+    close_button:SetPoint("CENTER", deco, "CENTER", 1, -1)
+    close_button:SetScript("OnClick", close_dialog)
+end
+
 bfwf_toggle_config_dialog = function()
-    local cfgdlg = LibStub("AceConfigDialog-3.0")
-    cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
-    cfgdlg:Open("BigFootWorldChannelFilter")
-    cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+    if cfgdlg.OpenFrames and cfgdlg.OpenFrames['BigFootWorldChannelFilter'] then
+        if cfgdlg.OpenFrames['BigFootWorldChannelFilter']:IsShown() then
+            cfgdlg:Close('BigFootWorldChannelFilter')
+        else
+            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+            cfgdlg:Open("BigFootWorldChannelFilter")
+            cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+            create_close_button()
+        end
+    else
+        cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+        cfgdlg:Open("BigFootWorldChannelFilter")
+        cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+        create_close_button()
+    end
 end

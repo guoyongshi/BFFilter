@@ -7,9 +7,7 @@ local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("BigFootWorldChannelFi
     icon = "Interface\\Icons\\INV_Misc_MissileSmall_Green",
     OnClick = function(self,button)
         if button == 'LeftButton' then
-            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
-            cfgdlg:Open("BigFootWorldChannelFilter")
-            cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+            bfwf_toggle_config_dialog()
         elseif button == 'RightButton' then
             bfwf_toggle_bf_filter()
         end
