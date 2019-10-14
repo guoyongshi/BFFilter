@@ -36,6 +36,29 @@ local function string_split(msg)
     return s
 end
 
+local function is_symbol(c)
+    local cv,_ = string.byte(c)
+    if not cv then
+        return false
+    end
+    if cv<48 then
+        return true
+    end
+
+    if cv>57 and cv<65 then
+        return true
+    end
+
+    if cv>90 and cv<97 then
+        return true
+    end
+
+    if cv>122 and cv < 128 then
+        return true
+    end
+
+    return false
+end
 --叠字过滤
 local function trim_rchars(cs)
     local _cs = {}
@@ -43,15 +66,18 @@ local function trim_rchars(cs)
     local rn = 0
     for _,c in ipairs(cs) do
         if lastc ~= c then
-            lastc = c
             rn = 1
-            table.insert(_cs,c)
+            if is_symbol(lastc) and c == ' ' then
+                --符号后面的空格直接不要
+            else
+                lastc = c
+                table.insert(_cs,c)
+            end
         else
             rn = rn + 1
-            local cv,_ = string.byte(c)
             if rn==2 then
                 --数字、字母、中文留两个
-                if (cv>=48 and cv<=57) or (cv>=65 and cv<=90) or (cv>=97 and cv<=122) or cv>192 then
+                if not is_symbol(c) then
                     table.insert(_cs,c)
                 end
             end
@@ -83,6 +109,10 @@ bfwf_trim_message = function(msg)
         return false,msg
     end
 
+    if #cs1 ~= #cs2 then    --叠句过滤后可能会产生叠字
+        cs2 = trim_rchars(cs2)
+    end
+
     local _msg = ''
     for _,c in ipairs(cs2) do
         _msg = _msg .. c
@@ -90,3 +120,4 @@ bfwf_trim_message = function(msg)
 
     return true,_msg
 end
+

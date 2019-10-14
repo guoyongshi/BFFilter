@@ -85,7 +85,11 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         return false
     end
 
-    if chname ~= '大脚世界频道' and chname ~= '寻求组队' then
+    if not chname then
+        return false
+    end
+
+    if not string.find(chname,'世') and chname ~= '寻求组队' then
         return false
     end
 
