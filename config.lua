@@ -4,8 +4,7 @@ local function whitelist_init()
        return
     end
 
-    BFWC_Filter_SavedConfigs.whitelist_enable = true
-    BFWC_Filter_SavedConfigs.whitelist = { '任务','JY' }
+    BFWC_Filter_SavedConfigs.whitelist = { }
 end
 
 local function blacklist_init()
@@ -15,8 +14,8 @@ local function blacklist_init()
 
     BFWC_Filter_SavedConfigs.blacklist_enable = true
     BFWC_Filter_SavedConfigs.blacklist = {
-        '/组','一组','邮寄','大量','带价','代价','位面','老板','支付',
-        'VX','免费','ZFB'
+        '/组','一组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
+        'VX','免费','ZFB','收G'
     }
 end
 
@@ -385,17 +384,15 @@ local config_options = {
             order = 3,
             width = 0.5,
             disabled = function(info)
-                return not BFWC_Filter_SavedConfigs.enable or not BFWC_Filter_SavedConfigs.whitelist_enable
+                return not BFWC_Filter_SavedConfigs.enable
             end,
             args = {
-                enable = {
-                    type = 'toggle',
-                    name = '启用白名单',
-                    order = 1,
-                    disabled = false,
-                    get = function(info) return BFWC_Filter_SavedConfigs.whitelist_enable end,
-                    set = function(info, val) BFWC_Filter_SavedConfigs.whitelist_enable = val  end
+                desc1 = {
+                    type = 'description',
+                    name = '|cffffd100提示：|r\n  白名单关键词匹配通过的信息将作为组队信息提取到【|cffffd100我要找队伍|r】里\n',
+                    order = 1
                 },
+
                 editor = {
                     type = 'input',
                     name = '自定义组队信息关键词(用英文逗号分隔)',
@@ -403,7 +400,7 @@ local config_options = {
                     usage = '关键词之间用英文逗号分隔，不要回车',
                     width = 'full',
                     order = 2,
-                    disabled = function() return not BFWC_Filter_SavedConfigs.whitelist_enable end,
+                    disabled = function() return not BFWC_Filter_SavedConfigs.enable end,
                     get = function()
                         local s = ''
                         for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
@@ -421,7 +418,7 @@ local config_options = {
                 autosel = {
                     type = 'toggle',
                     name = '根据我的等级自动过滤组队信息！',
-                    disabled = function() return not BFWC_Filter_SavedConfigs.whitelist_enable end,
+                    disabled = function() return not BFWC_Filter_SavedConfigs.enable end,
                     get = function(info) return BFWC_Filter_SavedConfigs.auto_filter_by_level end,
                     set = function(info,val)
                         BFWC_Filter_SavedConfigs.auto_filter_by_level = val
@@ -430,7 +427,7 @@ local config_options = {
                     width = 'full',
                     order = 3,
                 },
-                desc = {
+                desc2 = {
                     type = 'description',
                     name = '\n手动选择关心的副本组队信息\n中括号内文字是预设的关键字，如果不能满足需求可自行添加白名单关键词。',
                     order = 4,

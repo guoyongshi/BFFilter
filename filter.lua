@@ -85,10 +85,6 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         return false
     end
 
-    if not BFWC_Filter_SavedConfigs.blacklist_enable and not BFWC_Filter_SavedConfigs.whitelist_enable then
-        return false
-    end
-
     if chname ~= '大脚世界频道' and chname ~= '寻求组队' then
         return false
     end
@@ -118,10 +114,6 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
                 return true
             end
         end
-
-        if not BFWC_Filter_SavedConfigs.whitelist_enable then
-            return false
-        end
     end
 
     for _,d in ipairs(bfwf_dungeons) do
@@ -136,13 +128,11 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         end
     end
 
-    if BFWC_Filter_SavedConfigs.whitelist_enable then
-        for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
-            local lk = string.lower(k)
-            if lk:len()>0 and string.find(lmessage,lk) then
-                add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
-                return false
-            end
+    for _, k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
+        local lk = string.lower(k)
+        if lk:len() > 0 and string.find(lmessage, lk) then
+            add_msg_to_team_log(line, message, lmessage, playerguid, fullname, shortname)
+            return false
         end
     end
 
