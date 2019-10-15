@@ -109,9 +109,7 @@ end
 
 local cfgdlg = LibStub('AceConfigDialog-3.0')
 function draghandle_prototype:OnLeftButton()
-    cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
-    cfgdlg:Open("BigFootWorldChannelFilter")
-    cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+    bfwf_toggle_config_dialog()
 end
 
 function draghandle_prototype:OnRightButton()

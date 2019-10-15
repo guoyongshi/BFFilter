@@ -332,6 +332,28 @@ local config_options = {
                     disabled = function(info)
                         return not BFWC_Filter_SavedConfigs.enable
                     end
+                },
+
+                reducemsg = {
+                    type = 'toggle',
+                    name = '|cffffd100重复符号、词、句裁减|r',
+                    desc = '|cffffd100比如：ZUL 4=1T++++++++++MMMMMMMMMMM压缩成ZUL 4=1T++MM|r',
+                    descStyle = 'inline',
+                    order = 10.1,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.reducemsg end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.reducemsg=val end
+                },
+
+                whiteonly = {
+                    type = 'toggle',
+                    name = '|cffffd100只显示包含白名单关键词的信息|r',
+                    desc = '|cffff0000危险：本选项会过滤掉所有白名单以外信息。这将导致大量信息被过滤!\n如果你不是明确明白该选项的用途，请不要勾选！|r',
+                    descStyle = 'inline',
+                    order = 11,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.whiteonly end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.whiteonly=val end
                 }
             }
         },
@@ -692,20 +714,35 @@ local function create_close_button()
     close_button:SetScript("OnClick", close_dialog)
 end
 
+local function on_frame_close(self)
+    local st = cfgdlg:GetStatusTable('BigFootWorldChannelFilter');
+    BFWC_Filter_SavedConfigs.dlg_width = math.floor(st.width or 800)
+    BFWC_Filter_SavedConfigs.dlg_height = math.floor(st.height or 600)
+    if BFWC_Filter_SavedConfigs.dlg_width<640 then
+        BFWC_Filter_SavedConfigs.dlg_width = 640
+    end
+    if BFWC_Filter_SavedConfigs.dlg_height<480 then
+        BFWC_Filter_SavedConfigs.dlg_height = 480
+    end
+end
 bfwf_toggle_config_dialog = function()
+    local w = BFWC_Filter_SavedConfigs.dlg_width or 800
+    local h = BFWC_Filter_SavedConfigs.dlg_height or 600
     if cfgdlg.OpenFrames and cfgdlg.OpenFrames['BigFootWorldChannelFilter'] then
         if cfgdlg.OpenFrames['BigFootWorldChannelFilter']:IsShown() then
             cfgdlg:Close('BigFootWorldChannelFilter')
         else
-            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", w, h)
             cfgdlg:Open("BigFootWorldChannelFilter")
             cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
             create_close_button()
+            cfgdlg.OpenFrames['BigFootWorldChannelFilter']:SetCallback('OnClose',on_frame_close)
         end
     else
-        cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", 800, 600)
+        cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", w, h)
         cfgdlg:Open("BigFootWorldChannelFilter")
         cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
         create_close_button()
+        cfgdlg.OpenFrames['BigFootWorldChannelFilter']:SetCallback('OnClose',on_frame_close)
     end
 end

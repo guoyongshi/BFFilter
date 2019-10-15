@@ -64,8 +64,20 @@ local function trim_rchars(cs)
     local _cs = {}
     local lastc=''
     local rn = 0
+    local force = false
     for _,c in ipairs(cs) do
-        if lastc ~= c then
+        if force then
+            lastc = c
+            table.insert(_cs,c)
+        elseif lastc=='|' and c=='c' then --颜色表达式(|cffff0000 |r)的处理
+            lastc = c
+            table.insert(_cs,c)
+            force = true
+        elseif lastc=='|' and c=='r' then
+            lastc = c
+            table.insert(_cs,c)
+            force = false
+        elseif lastc ~= c then
             rn = 1
             if is_symbol(lastc) and c == ' ' then
                 --符号后面的空格直接不要
@@ -88,15 +100,41 @@ local function trim_rchars(cs)
 end
 
 --叠句过滤
+-- 处理方法
+-- 两张纸条内容一样，一上一下
+-- 上方的纸条不动，向右滑动下方的纸条
+-- 在两张纸条重叠处找出文字相同的最大区域，删除上方纸条该区域的文字
+-- xabcdefxabcdefxxxx
+--        xabcdefxabcdefxxxx
 local function trim_rsentence(cs)
-    if #cs < 15 then
+    local total = #cs
+    if total < 15 then
         return cs
     end
-    --滑动窗口
-    for offset=0,(#cs-5) do
-        local window1={}
-        for i=1,5 do
-            window1[i+offset]=cs[i+offset]
+
+    local fin = false
+    for i=10,total-10 do
+        if fin then
+            break
+        end
+        local nm = 0
+        local start = 1
+        for j=1,total-10 do
+            if fin then
+                break
+            end
+            if cs[j] == cs[i+j] then
+                nm = nm+1
+            else
+                if nm>4 then
+                    for k=1,nm do
+                        table.remove(cs,i+start)
+                    end
+                    fin = true
+                end
+                start = j + 1
+                nm = 0
+            end
         end
     end
 
@@ -105,25 +143,36 @@ end
 
 bfwf_trim_message = function(msg)
     if not msg then
-        return false,msg
+        return 0,msg
     end
 
     local cs = string_split(msg)
     if not cs then
-        return false,msg
+        return 0,msg
     end
 
+    local len = #cs
     local cs1 = trim_rchars(cs)
     local cs2 = trim_rsentence(cs1)
+    while true do
+        local n = #cs2
+        cs2 = trim_rsentence(cs2)
+        if n == #cs2 then
+            break
+        end
+    end
 
     if #cs == #cs2 then
-        return false,msg
+        return 0,msg
     end
 
     if #cs1 ~= #cs2 then    --叠句过滤后可能会产生叠字
         cs2 = trim_rchars(cs2)
     end
 
-    return true,table.concat(cs2)
+    return (len-#cs2),table.concat(cs2)
 end
 
+a='STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1'
+b,c=bfwf_trim_message(a)
+print(b,c)

@@ -66,11 +66,21 @@ end
 --每条消息都有不同的行号(line)
 --修改消息：return false,newmsg, from, a, b, c, d, e, chnum, chname, f,line,...
 --fullname不一定能完整取到，有时服务器名取不到。即使同一个人，刚才能取到，现在不一定能取到
-local function chat_message_filter(chatFrame, event, message, fullname, a, b, shortname, d, e, chnum, chname, f,line,playerguid,...)
+local function chat_message_filter(chatFrame, event, message,...)
     if not BFWC_Filter_SavedConfigs.enable then
         return false
     end
 
+    if not message or string.len(message)==0 then
+        return false
+    end
+    --fullname, a, b, shortname, d, e, chnum, chname, f,line,playerguid,
+    local fullname = select(1,...)
+    local shortname = select(4,...)
+    local chnum = select(7,...)
+    local chname = select(8,...)
+    local line = select(10,...)
+    local playerguid = select(11,...)
     if playerguid == bfwf_g_data.myid then
         return false
     end
@@ -111,6 +121,14 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         end
     end
 
+    local trim = 0
+    local _msg = ''
+    if BFWC_Filter_SavedConfigs.reducemsg then
+        trim,_msg = bfwf_trim_message(message)
+    end
+    if trim>0 then
+        message = _msg .. '|cff4f4206[-' .. trim .. ']|r'
+    end
     local lmessage = string.lower(message)
     if BFWC_Filter_SavedConfigs.blacklist_enable then
         for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
@@ -127,6 +145,9 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
                 local lk = string.lower(k)
                 if lk:len()>0 and string.find(lmessage,lk) then
                     add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
+                    if trim>0 then
+                        return false,message,...
+                    end
                     return false
                 end
             end
@@ -137,11 +158,17 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         local lk = string.lower(k)
         if lk:len() > 0 and string.find(lmessage, lk) then
             add_msg_to_team_log(line, message, lmessage, playerguid, fullname, shortname)
+            if trim>0 then
+                return false,message,...
+            end
             return false
         end
     end
 
-    return false
+    if trim>0 and not BFWC_Filter_SavedConfigs.whiteonly then
+        return false,message, ...
+    end
+    return BFWC_Filter_SavedConfigs.whiteonly
 end
 
 bfwf_chat_filter_init = function()
