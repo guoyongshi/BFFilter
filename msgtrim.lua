@@ -153,13 +153,11 @@ bfwf_trim_message = function(msg)
 
     local len = #cs
     local cs1 = trim_rchars(cs)
+    local n = #cs1
     local cs2 = trim_rsentence(cs1)
-    while true do
-        local n = #cs2
+    while n ~= #cs2 do
+        n = #cs2
         cs2 = trim_rsentence(cs2)
-        if n == #cs2 then
-            break
-        end
     end
 
     if #cs == #cs2 then
