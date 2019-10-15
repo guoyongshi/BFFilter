@@ -3,11 +3,6 @@ local last_show_message = {
 
 }
 
---消息瘦身
-local function reduce_message(msg)
-    local last_char = 0
-end
-
 local dirty = false
 
 local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)

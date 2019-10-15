@@ -1,7 +1,8 @@
 ## Interface: 11302
-## Title: BigFoot World Channel Filter
+## Title: BFFilter |r|cFF0099FF[组队助手]|r
 ## Version: 1.0.8
-## Notes: BigFoot World Channel Filter
+## Notes: Team Assistant
+## Notes-zhCN: 怀旧服组队助手
 ## SavedVariablesPerCharacter: BFWC_Filter_SavedConfigs
 ## Author: guoyongshi@gmail.com
 ## X-License: GPLv3

@@ -173,6 +173,3 @@ bfwf_trim_message = function(msg)
     return (len-#cs2),table.concat(cs2)
 end
 
-a='STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1 STSM三波AA来FS 4 = 1'
-b,c=bfwf_trim_message(a)
-print(b,c)
