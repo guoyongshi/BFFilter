@@ -355,21 +355,14 @@ local config_options = {
                 },
                 editor = {
                     type = 'input',
-                    name = '自定义关键词(用英文逗号分隔)',
+                    name = '自定义关键词(用英文逗号分隔，不要回车)',
                     multiline = true,
                     usage = '关键词之间用英文逗号分隔，不要回车',
                     width = 'full',
                     order = 2,
                     disabled = function() return not BFWC_Filter_SavedConfigs.blacklist_enable end,
                     get = function()
-                        local s = ''
-                        for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
-                            if s:len()>0 then
-                                s = s .. ','
-                            end
-                            s = s .. k
-                        end
-                        return s
+                        return table.concat(BFWC_Filter_SavedConfigs.blacklist,',')
                     end,
                     set = function(info,val)
                         BFWC_Filter_SavedConfigs.blacklist = bfwf_split_str(val)
@@ -395,24 +388,17 @@ local config_options = {
 
                 editor = {
                     type = 'input',
-                    name = '自定义组队信息关键词(用英文逗号分隔)',
+                    name = '自定义组队信息关键词(用英文逗号分隔，不要回车)',
                     multiline = true,
                     usage = '关键词之间用英文逗号分隔，不要回车',
                     width = 'full',
                     order = 2,
                     disabled = function() return not BFWC_Filter_SavedConfigs.enable end,
                     get = function()
-                        local s = ''
-                        for _,k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
-                            if s:len()>0 then
-                                s = s .. ','
-                            end
-                            s = s .. k
-                        end
-                        return s
+                        return table.concat(BFWC_Filter_SavedConfigs.whitelist or {},',')
                     end,
                     set = function(info,val)
-                        BFWC_Filter_SavedConfigs.whitelist = bfwf_split_str(val)
+                        BFWC_Filter_SavedConfigs.whitelist = bfwf_split_str(val) or {}
                     end
                 },
                 autosel = {

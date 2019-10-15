@@ -89,6 +89,17 @@ end
 
 --叠句过滤
 local function trim_rsentence(cs)
+    if #cs < 15 then
+        return cs
+    end
+    --滑动窗口
+    for offset=0,(#cs-5) do
+        local window1={}
+        for i=1,5 do
+            window1[i+offset]=cs[i+offset]
+        end
+    end
+
     return cs
 end
 
@@ -113,11 +124,6 @@ bfwf_trim_message = function(msg)
         cs2 = trim_rchars(cs2)
     end
 
-    local _msg = ''
-    for _,c in ipairs(cs2) do
-        _msg = _msg .. c
-    end
-
-    return true,_msg
+    return true,table.concat(cs2)
 end
 

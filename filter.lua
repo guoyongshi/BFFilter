@@ -89,7 +89,8 @@ local function chat_message_filter(chatFrame, event, message, fullname, a, b, sh
         return false
     end
 
-    if not string.find(chname,'世') and chname ~= '寻求组队' then
+    --一些整合插件会把频道名过滤成简称
+    if not string.find(chname,'世') and not string.find(chname,'组') then
         return false
     end
 

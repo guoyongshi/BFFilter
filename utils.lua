@@ -1,34 +1,32 @@
 
 
-bfwf_split_str = function(str, c)
+bfwf_split_str = function(str, sp)
     local strs = {}
-    if not c then
-        c = 0x2c
+    if not sp then
+        sp = 0x2c
+    else
+        sp,_ = string.byte(sp,1,1)
     end
     if not str then
         return strs
     end
 
-    local len = str:len()
-    if len == 0 then
-        return strs
-    end
-
-
-    local n = str:len()
-    local start = 1
-    for i = 1, n do
-        local b = string.byte(str, i)
-        if b == c then
-            if i ~= start then
-                strs[#strs + 1] = string.sub(str, start, i - 1)
+    local bs = {string.byte(str,1,-1)}
+    local tmp = {}
+    for i=1,#bs do
+        local b = bs[i]
+        if b == sp then
+            if #tmp>0 then
+                table.insert(strs,table.concat(tmp))
+                tmp = {}
             end
-            start = i + 1
+        elseif b ~= 0xd and b ~= 0xa then
+            table.insert(tmp,string.char(b))
         end
     end
 
-    if start <= n then
-        strs[#strs + 1] = string.sub(str, start, n)
+    if #tmp>0 then
+        table.insert(strs,table.concat(tmp))
     end
 
     return strs
