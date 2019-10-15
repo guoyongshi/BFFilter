@@ -288,9 +288,9 @@ local config_options = {
                     set = function(info, val)
                         BFWC_Filter_SavedConfigs.minimap.hide = not val
                         if val then
-                            LibStub("LibDBIcon-1.0"):Show("BigFootWorldChannelFilter")
+                            LibStub("LibDBIcon-1.0"):Show("GYSGroupChannelFilter")
                         else
-                            LibStub("LibDBIcon-1.0"):Hide("BigFootWorldChannelFilter")
+                            LibStub("LibDBIcon-1.0"):Hide("GYSGroupChannelFilter")
                         end
                     end,
                     get = function(info)
@@ -654,8 +654,8 @@ bfwf_configs_init = function()
         }
     end
 
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("BigFootWorldChannelFilter", config_options)
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("BigFootWorldChannelFilter", "组队频道过滤")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable("GYSGroupChannelFilter", config_options)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GYSGroupChannelFilter", "组队频道过滤")
 end
 
 --[[
@@ -673,7 +673,7 @@ local cfgdlg = LibStub("AceConfigDialog-3.0")
 local close_button = nil
 local function close_dialog()
     if cfgdlg then
-        cfgdlg:Close('BigFootWorldChannelFilter')
+        cfgdlg:Close('GYSGroupChannelFilter')
     end
 end
 local function create_close_button()
@@ -681,11 +681,11 @@ local function create_close_button()
         return
     end
 
-    if not cfgdlg.OpenFrames or not cfgdlg.OpenFrames['BigFootWorldChannelFilter'] then
+    if not cfgdlg.OpenFrames or not cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
         return
     end
 
-    local frame = cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame
+    local frame = cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame
 
     local deco = CreateFrame("Frame", nil, frame)
     deco:SetSize(17, 40)
@@ -715,7 +715,7 @@ local function create_close_button()
 end
 
 local function on_frame_close(self)
-    local st = cfgdlg:GetStatusTable('BigFootWorldChannelFilter');
+    local st = cfgdlg:GetStatusTable('GYSGroupChannelFilter');
     BFWC_Filter_SavedConfigs.dlg_width = math.floor(st.width or 800)
     BFWC_Filter_SavedConfigs.dlg_height = math.floor(st.height or 600)
     if BFWC_Filter_SavedConfigs.dlg_width<640 then
@@ -728,21 +728,21 @@ end
 bfwf_toggle_config_dialog = function()
     local w = BFWC_Filter_SavedConfigs.dlg_width or 800
     local h = BFWC_Filter_SavedConfigs.dlg_height or 600
-    if cfgdlg.OpenFrames and cfgdlg.OpenFrames['BigFootWorldChannelFilter'] then
-        if cfgdlg.OpenFrames['BigFootWorldChannelFilter']:IsShown() then
-            cfgdlg:Close('BigFootWorldChannelFilter')
+    if cfgdlg.OpenFrames and cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
+        if cfgdlg.OpenFrames['GYSGroupChannelFilter']:IsShown() then
+            cfgdlg:Close('GYSGroupChannelFilter')
         else
-            cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", w, h)
-            cfgdlg:Open("BigFootWorldChannelFilter")
-            cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+            cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
+            cfgdlg:Open("GYSGroupChannelFilter")
+            cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
             create_close_button()
-            cfgdlg.OpenFrames['BigFootWorldChannelFilter']:SetCallback('OnClose',on_frame_close)
+            cfgdlg.OpenFrames['GYSGroupChannelFilter']:SetCallback('OnClose',on_frame_close)
         end
     else
-        cfgdlg:SetDefaultSize("BigFootWorldChannelFilter", w, h)
-        cfgdlg:Open("BigFootWorldChannelFilter")
-        cfgdlg.OpenFrames['BigFootWorldChannelFilter'].frame:SetFrameStrata("MEDIUM")
+        cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
+        cfgdlg:Open("GYSGroupChannelFilter")
+        cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
         create_close_button()
-        cfgdlg.OpenFrames['BigFootWorldChannelFilter']:SetCallback('OnClose',on_frame_close)
+        cfgdlg.OpenFrames['GYSGroupChannelFilter']:SetCallback('OnClose',on_frame_close)
     end
 end

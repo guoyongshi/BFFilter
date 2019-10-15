@@ -204,6 +204,6 @@ bfwf_update_config_dialog = function()
         return
     end
 	dirty = false
-	cfgreg:NotifyChange('BigFootWorldChannelFilter')
+	cfgreg:NotifyChange('GYSGroupChannelFilter')
 end
 

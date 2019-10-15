@@ -1,7 +1,7 @@
 
 local minimap_icon_texture
 local cfgdlg = LibStub("AceConfigDialog-3.0")
-local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("BigFootWorldChannelFilter", {
+local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("GYSGroupChannelFilter", {
     type = "data source",
     text = "SpellCastingHelper",
     icon = "Interface\\Icons\\INV_Misc_MissileSmall_Green",
@@ -34,11 +34,18 @@ bfwf_minimap_button_init = function()
     if not dbicon then
         return
     end
-    dbicon:Register("BigFootWorldChannelFilter", LDBCfg, BFWC_Filter_SavedConfigs.minimap)
-    minimap_icon_texture = dbicon:GetMinimapButton('BigFootWorldChannelFilter').icon
+    dbicon:Register("GYSGroupChannelFilter", LDBCfg, BFWC_Filter_SavedConfigs.minimap)
+    if not dbicon:GetMinimapButton('GYSGroupChannelFilter') then
+        minimap_icon_texture = nil
+        return
+    end
+    minimap_icon_texture = dbicon:GetMinimapButton('GYSGroupChannelFilter').icon
 end
 
 bfwf_update_minimap_icon = function()
+    if not minimap_icon_texture then
+        return
+    end
     if BFWC_Filter_SavedConfigs.enable then
         minimap_icon_texture:SetTexture('Interface\\AddOns\\BFFilter\\texture\\minimap')
     else

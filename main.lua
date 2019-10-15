@@ -1,5 +1,5 @@
 
-local BFFilter=LibStub("AceAddon-3.0"):NewAddon("BigFootWorldChannelFilter", "AceConsole-3.0","AceTimer-3.0")
+local BFFilter=LibStub("AceAddon-3.0"):NewAddon("GYSGroupChannelFilter", "AceConsole-3.0","AceTimer-3.0")
 
 local function update_player_info()
     local _, class, _ = UnitClass('player')
