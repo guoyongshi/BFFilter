@@ -713,36 +713,54 @@ local function create_close_button()
     close_button:SetPoint("CENTER", deco, "CENTER", 1, -1)
     close_button:SetScript("OnClick", close_dialog)
 end
-
-local function on_frame_close(self)
-    local st = cfgdlg:GetStatusTable('GYSGroupChannelFilter');
-    BFWC_Filter_SavedConfigs.dlg_width = math.floor(st.width or 800)
-    BFWC_Filter_SavedConfigs.dlg_height = math.floor(st.height or 600)
+local old_on_width_set_func
+local old_on_height_set_func
+local function OnWidthSet(self,width)
+    BFWC_Filter_SavedConfigs.dlg_width = math.floor(width or 800)
     if BFWC_Filter_SavedConfigs.dlg_width<640 then
         BFWC_Filter_SavedConfigs.dlg_width = 640
     end
+    if old_on_width_set_func then
+        old_on_width_set_func(self,width)
+    end
+end
+
+local function OnHeightSet(self,height)
+    BFWC_Filter_SavedConfigs.dlg_height = math.floor(height or 600)
     if BFWC_Filter_SavedConfigs.dlg_height<480 then
         BFWC_Filter_SavedConfigs.dlg_height = 480
     end
+    if old_on_height_set_func then
+        old_on_height_set_func(self,height)
+    end
 end
+
 bfwf_toggle_config_dialog = function()
     local w = BFWC_Filter_SavedConfigs.dlg_width or 800
     local h = BFWC_Filter_SavedConfigs.dlg_height or 600
     if cfgdlg.OpenFrames and cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
         if cfgdlg.OpenFrames['GYSGroupChannelFilter']:IsShown() then
             cfgdlg:Close('GYSGroupChannelFilter')
+            old_on_width_set_func = nil
+            old_on_height_set_func = nil
         else
             cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
             cfgdlg:Open("GYSGroupChannelFilter")
             cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
             create_close_button()
-            cfgdlg.OpenFrames['GYSGroupChannelFilter']:SetCallback('OnClose',on_frame_close)
+            old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+            old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+            cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
+            cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
         end
     else
         cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
         cfgdlg:Open("GYSGroupChannelFilter")
         cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
         create_close_button()
-        cfgdlg.OpenFrames['GYSGroupChannelFilter']:SetCallback('OnClose',on_frame_close)
+        old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+        old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+        cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
+        cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
     end
 end
