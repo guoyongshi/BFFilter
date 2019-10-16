@@ -720,7 +720,7 @@ local function OnWidthSet(self,width)
     if BFWC_Filter_SavedConfigs.dlg_width<640 then
         BFWC_Filter_SavedConfigs.dlg_width = 640
     end
-    if old_on_width_set_func then
+    if old_on_width_set_func and old_on_width_set_func ~= OnWidthSet then
         old_on_width_set_func(self,width)
     end
 end
@@ -730,7 +730,7 @@ local function OnHeightSet(self,height)
     if BFWC_Filter_SavedConfigs.dlg_height<480 then
         BFWC_Filter_SavedConfigs.dlg_height = 480
     end
-    if old_on_height_set_func then
+    if old_on_height_set_func and old_on_height_set_func ~= OnHeightSet then
         old_on_height_set_func(self,height)
     end
 end
@@ -748,8 +748,12 @@ bfwf_toggle_config_dialog = function()
             cfgdlg:Open("GYSGroupChannelFilter")
             cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
             create_close_button()
-            old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
-            old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+            if not old_on_width_set_func then
+                old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+            end
+            if not old_on_height_set_func then
+                old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+            end
             cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
             cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
         end
@@ -758,8 +762,12 @@ bfwf_toggle_config_dialog = function()
         cfgdlg:Open("GYSGroupChannelFilter")
         cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
         create_close_button()
-        old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
-        old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+        if not old_on_width_set_func then
+            old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+        end
+        if not old_on_height_set_func then
+            old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+        end
         cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
         cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
     end
