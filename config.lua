@@ -165,6 +165,9 @@ local function whisper_level_duty()
     end
 
     local info = bfwf_myinfo(d1,d2)
+    if BFWC_Filter_SavedConfigs.addition_msg and string.len(BFWC_Filter_SavedConfigs.addition_msg)>0 then
+        info = info .. ',' .. BFWC_Filter_SavedConfigs.addition_msg
+    end
     local msg = '是否将您的信息\n|cffff7eff' .. info .. '|r\n发送给 |cffbb9e75' .. last_select_team_leader.name .. '|r ?'
     bfwf_confirm(msg,nil,nil,function ()
         SendChatMessage(info,"WHISPER", nil,last_select_team_leader.name)
@@ -517,6 +520,7 @@ local config_options = {
                             type = 'select',
                             name = '主责',
                             order = 1,
+                            width = 'half',
                             values = function ()
                                 if bfwf_player.classes==1 then
                                     return {['D']='DPS'}
@@ -553,6 +557,7 @@ local config_options = {
                             type = 'select',
                             name = '次责',
                             order = 2,
+                            width = 'half',
                             values = function ()
                                 if bfwf_player.classes==1 then
                                     return {['X']='无',['D']='DPS'}
@@ -585,10 +590,18 @@ local config_options = {
                             end,
                             disabled = function() return bfwf_player.classes==1 end
                         },
+                        addition = {
+                            type = 'input',
+                            name = '附加信息',
+                            order = 3,
+                            width = 2,
+                            get = function(info) return BFWC_Filter_SavedConfigs.addition_msg or ''  end,
+                            set = function(info,val) BFWC_Filter_SavedConfigs.addition_msg = val or '' end
+                        },
                         send = {
                             type = 'execute',
                             name = '发送',
-                            order = 3,
+                            order = 4,
                             disabled = function(info) return not last_select_team_leader end,
                             func = whisper_level_duty
                         }
