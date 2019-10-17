@@ -96,7 +96,16 @@ function BFFilter:CheckBigFootChannel()
 
     bfwf_big_foot_world_channel_joined = false
     if BFWC_Filter_SavedConfigs.autojoin_bigfoot then
-        JoinChannelByName('大脚世界频道')
+        local chatframe = DEFAULT_CHAT_FRAME
+        if not chatframe then
+            chatframe = ChatFrame1
+        end
+        local id
+        if chatframe and chatframe.GetID then
+            id = ChatFrame1:GetID()
+        end
+        JoinPermanentChannel('大脚世界频道',nil,id)
+        ChatFrame_AddChannel(DEFAULT_CHAT_FRAME, '大脚世界频道')
     end
 end
 

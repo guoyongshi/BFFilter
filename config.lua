@@ -20,26 +20,37 @@ local function blacklist_init()
 end
 
 local function dungeons_init()
-    if BFWC_Filter_SavedConfigs.dungeons then
-        return
-    end
-
     BFWC_Filter_SavedConfigs.dungeons = {}
-    for _,d in ipairs(bfwf_dungeons) do
-        BFWC_Filter_SavedConfigs.dungeons[d.name] = true
+    if BFWC_Filter_SavedConfigs.auto_filter_by_level then
+        local lv = bfwf_player.level
+        for _,d in ipairs(bfwf_dungeons) do
+            if lv>=d.lmin and lv<= d.lmax then
+                BFWC_Filter_SavedConfigs.dungeons[d.name] = true
+            else
+                BFWC_Filter_SavedConfigs.dungeons[d.name] = false
+            end
+        end
     end
 end
 
+local reset_width = false
+local reset_height = false
 local function reset_configs()
+    reset_width = true
+    reset_height = true
     BFWC_Filter_SavedConfigs = {
         saved = true,
         enable = true,
         interval = 10,
+        dlg_width = 900,
+        dlg_height = 600,
         hide_enter_leave = true,
         auto_filter_by_level = true,
         filter_request_to_join = true,
         autojoin_bigfoot = true,
         minimap = { hide = false},
+        player = {},
+        dungeons = {}
     }
     dungeons_init()
     whitelist_init()
@@ -215,7 +226,7 @@ local config_options = {
                     name = '加入大脚世界频道|/join 大脚世界频道',
                     order = 2,
                     func = function()
-                        --JoinChannelByName('大脚世界频道')
+
                     end,
                     disabled = function() return bfwf_big_foot_world_channel_joined end,
                     dialogControl = 'MacroButton'
@@ -594,7 +605,7 @@ local config_options = {
                             type = 'input',
                             name = '附加信息',
                             order = 3,
-                            width = 2,
+                            width = 1.5,
                             get = function(info) return BFWC_Filter_SavedConfigs.addition_msg or ''  end,
                             set = function(info,val) BFWC_Filter_SavedConfigs.addition_msg = val or '' end
                         },
@@ -609,7 +620,7 @@ local config_options = {
                 }
             }
         },
-
+--[[
         organize = {
             type = 'group',
             name = '我要组队',
@@ -622,7 +633,7 @@ local config_options = {
                     order = 1,
                 },
             }
-        }
+        }--]]
     }
 }
 
@@ -729,7 +740,11 @@ end
 local old_on_width_set_func
 local old_on_height_set_func
 local function OnWidthSet(self,width)
-    BFWC_Filter_SavedConfigs.dlg_width = math.floor(width or 800)
+    if reset_width then
+        reset_width = false
+        width = 900
+    end
+    BFWC_Filter_SavedConfigs.dlg_width = math.floor(width or 900)
     if BFWC_Filter_SavedConfigs.dlg_width<640 then
         BFWC_Filter_SavedConfigs.dlg_width = 640
     end
@@ -739,6 +754,10 @@ local function OnWidthSet(self,width)
 end
 
 local function OnHeightSet(self,height)
+    if reset_height then
+        reset_height = false
+        height = 600
+    end
     BFWC_Filter_SavedConfigs.dlg_height = math.floor(height or 600)
     if BFWC_Filter_SavedConfigs.dlg_height<480 then
         BFWC_Filter_SavedConfigs.dlg_height = 480
@@ -749,7 +768,7 @@ local function OnHeightSet(self,height)
 end
 
 bfwf_toggle_config_dialog = function()
-    local w = BFWC_Filter_SavedConfigs.dlg_width or 800
+    local w = BFWC_Filter_SavedConfigs.dlg_width or 900
     local h = BFWC_Filter_SavedConfigs.dlg_height or 600
     if cfgdlg.OpenFrames and cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
         if cfgdlg.OpenFrames['GYSGroupChannelFilter']:IsShown() then
