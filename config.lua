@@ -21,7 +21,7 @@ end
 
 local function dungeons_init()
     BFWC_Filter_SavedConfigs.dungeons = {}
-    if BFWC_Filter_SavedConfigs.auto_filter_by_level then
+    if bfwf_player.level and bfwf_player.level>0 and BFWC_Filter_SavedConfigs.auto_filter_by_level then
         local lv = bfwf_player.level
         for _,d in ipairs(bfwf_dungeons) do
             if lv>=d.lmin and lv<= d.lmax then
@@ -654,14 +654,11 @@ local function str_cat(arr)
 end
 
 bfwf_configs_init = function()
-    if not BFWC_Filter_SavedConfigs.saved then
+    if not BFWC_Filter_SavedConfigs or not BFWC_Filter_SavedConfigs.saved then
         reset_configs()
     end
-
     whitelist_init()
-
     blacklist_init()
-
     local args = config_options.args.whitelist.args
 
     local order = 10
@@ -677,7 +674,6 @@ bfwf_configs_init = function()
             set = function(info,val) BFWC_Filter_SavedConfigs.dungeons[info[2]] = val end
         }
     end
-
     LibStub("AceConfig-3.0"):RegisterOptionsTable("GYSGroupChannelFilter", config_options)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GYSGroupChannelFilter", "组队频道过滤")
 end
