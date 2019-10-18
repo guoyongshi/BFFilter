@@ -14,7 +14,7 @@ ver=`grep '## Version' BFFilter/BFFilter.toc |sed 's/.*: \?//'`
 rm -f BFFilter-$ver.zip
 
 
-zip -r BFFilter-$ver.zip BFFilter -x "BFFilter/.*" "BFFilter/zip.sh"
+zip -r BFFilter-$ver.zip BFFilter -x "BFFilter/.*" "BFFilter/zip.sh" "BFFilter/capture"  "BFFilter/texture/*.png"
 
 cd -
 
