@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Title: BFFilter |r|cFF0099FF[组队助手]|r
-## Version: 1.0.11
+## Version: 1.0.12
 ## Notes: Team Assistant
 ## Notes-zhCN: 怀旧服组队助手
 ## SavedVariablesPerCharacter: BFWC_Filter_SavedConfigs
@@ -17,5 +17,16 @@ filter.lua
 config.lua
 minimap.lua
 draghandle.lua
+
+ui/framebase.lua
+ui/checkbox.lua
+ui/listbox.lua
+ui/page_black.lua
+ui/page_desc.lua
+ui/page_findteam.lua
+ui/page_gen.lua
+ui/page_white.lua
+ui/optdlg.lua
+ui/ui.lua
 
 main.lua

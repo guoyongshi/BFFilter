@@ -1,17 +1,25 @@
 
+local methods = {
 
-local Type, Version = "BFFPageFindTeam", 26
-local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
-if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
+}
 
-local CreateFrame, UIParent = CreateFrame, UIParent
+function BFFPage_FindTeam(parent)
+    local frame = CreateFrame('ScrollFrame',nil,parent)
+    frame:EnableMouseWheel(true)
+    frame:SetBackdrop(BFF_PaneBackdrop)
+    frame:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+    frame:SetBackdropBorderColor(0.4, 0.4, 0.4)
 
-local function Constructor()
-    local page = AceGUI:Create('SimpleGroup')
+    local widget = {
+        frame = frame
+    }
 
+    for m,f in pairs(methods) do
+        widget[m] = f
+    end
 
-    return page
+    setmetatable(widget,{__index = BFF_FrameBase})
+
+    return widget
 end
-
-AceGUI:RegisterWidgetType(Type, Constructor, Version)
 
