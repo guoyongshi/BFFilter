@@ -47,7 +47,7 @@ local methods = {
     end
 }
 
-function BFFListBox(parent)
+function BFF_ListBox(parent)
     local frame = CreateFrame('Frame',nil,parent or UIParent)
     frame:EnableMouseWheel(true)
     frame:SetBackdrop(BFF_PaneBackdrop)

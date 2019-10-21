@@ -77,7 +77,7 @@ local function SizerSE_OnMouseDown(frame)
 end
 
 local function close_dialog(btn)
-    btn:GetParent():GetParent():Hide()
+    btn.obj.frame:Hide()
 end
 
 local function create_close_button(dlg)
@@ -106,6 +106,15 @@ local function create_close_button(dlg)
     local close_button = CreateFrame("BUTTON", nil, deco, "UIPanelCloseButton")
     close_button:SetPoint("CENTER", deco, "CENTER", 1, -1)
     close_button:SetScript("OnClick", close_dialog)
+
+    local closebutton = CreateFrame('Button',nil,dlg,'UIPanelButtonTemplate')
+    closebutton:SetScript("OnClick", close_dialog)
+    closebutton:SetPoint("BOTTOMRIGHT", -27, 17)
+    closebutton:SetHeight(20)
+    closebutton:SetWidth(100)
+    closebutton:SetText(CLOSE or '关闭')
+
+    return close_button,closebutton
 end
 
 local function create_sizzer(dlg)
@@ -134,7 +143,55 @@ local function create_sizzer(dlg)
     line2:SetTexCoord(0.05 - x, 0.5, 0.05, 0.5 + x, 0.05, 0.5 - x, 0.5 + x, 0.5)
 end
 
-function BFFOptionsDialog()
+local function create_page_container(dlg,lb)
+    local pagecontainer = CreateFrame('Frame',nil,dlg)
+    pagecontainer:SetPoint('TOPLEFT',lb.frame,'TOPRIGHT',0,0)
+    pagecontainer:SetPoint('BOTTOMRIGHT',dlg,'BOTTOMRIGHT',-15,42)
+    pagecontainer:SetBackdrop(BFF_PaneBackdrop)
+    pagecontainer:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
+    pagecontainer:SetBackdropBorderColor(0.4, 0.4, 0.4)
+
+    return pagecontainer
+end
+
+local function create_status_bar(dlg)
+    local statusbg = CreateFrame("Button", nil, dlg)
+    statusbg:SetPoint("BOTTOMLEFT", 15, 15)
+    statusbg:SetPoint("BOTTOMRIGHT", -132, 15)
+    statusbg:SetHeight(24)
+    statusbg:SetBackdrop(BFF_PaneBackdrop)
+    statusbg:SetBackdropColor(0.1,0.1,0.1)
+    statusbg:SetBackdropBorderColor(0.4,0.4,0.4)
+
+    local statustext = statusbg:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    statustext:SetPoint("TOPLEFT", 7, -2)
+    statustext:SetPoint("BOTTOMRIGHT", -7, 2)
+    statustext:SetHeight(20)
+    statustext:SetJustifyH("LEFT")
+    statustext:SetText("")
+    return statustext
+end
+
+local function create_pages(pagecontainer,lb)
+    local pages = {
+        { name = 'Desc', text = '说明', page = BFFPage_Desc(pagecontainer) },
+        { name = 'Gen', text = '通用设置', page = BFFPage_Gen(pagecontainer) },
+        { name = 'White', text = '白名单', page = BFFPage_White(pagecontainer) },
+        { name = 'Black', text = '黑名单', page = BFFPage_Black(pagecontainer) },
+        { name = 'FindTeam', text = '我要找队伍', page = BFFPage_FindTeam(pagecontainer) }
+    }
+
+    for _,it in ipairs(pages) do
+        lb:AddItem(it.name,it.text)
+        it.page:SetPoint('TOPLEFT',5,-5)
+        it.page:SetPoint('BOTTOMRIGHT',0,10)
+        it.page:Hide()
+    end
+
+    return pages
+end
+
+function BFF_OptionsDialog()
     local dlg = CreateFrame('Frame',nil,UIParent)
     dlg:SetPoint('CENTER')
     dlg:SetSize(900,600)
@@ -147,33 +204,25 @@ function BFFOptionsDialog()
     dlg:SetMinResize(400, 200)
     local titletext,titlebg = create_title(dlg)
     create_sizzer(dlg)
-    create_close_button(dlg)
+    local close1,close2=create_close_button(dlg)
 
-    local lb = BFFListBox(dlg)
+    local lb = BFF_ListBox(dlg)
     lb:SetPoint('TOPLEFT',15,-35)
     lb:SetPoint('BOTTOMLEFT',15,42)
     lb:SetWidth(175)
 
-    local pages = {
-        { name = 'Desc', text = '说明', page = BFFPage_Desc(dlg) },
-        { name = 'Gen', text = '通用设置', page = BFFPage_Gen(dlg) },
-        { name = 'White', text = '白名单', page = BFFPage_White(dlg) },
-        { name = 'Black', text = '黑名单', page = BFFPage_Black(dlg) },
-        { name = 'FindTeam', text = '我要找队伍', page = BFFPage_FindTeam(dlg) }
-    }
+    local pagecontainer = create_page_container(dlg,lb)
 
-    for _,it in ipairs(pages) do
-        lb:AddItem(it.name,it.text)
-        it.page:SetPoint('TOPLEFT',lb.frame,'TOPRIGHT',5,0)
-        it.page:SetPoint('BOTTOMRIGHT',dlg,'BOTTOMRIGHT',-15,42)
-        it.page:Hide()
-    end
+    local statustext = create_status_bar(dlg)
+
+    local pages = create_pages(pagecontainer,lb)
 
     local widget = {
         frame = dlg,
         listbox = lb,
         pages = pages,
         titletext = titletext,
+        statustext = statustext,
         titlebg = titlebg
     }
 
@@ -183,6 +232,9 @@ function BFFOptionsDialog()
 
     lb:SetCallback('OnItemSelected',widget,widget.OnItemSelected)
     setmetatable(widget,{__index = BFF_FrameBase})
+
+    close1.obj = widget
+    close2.obj = widget
 
     return widget
 end

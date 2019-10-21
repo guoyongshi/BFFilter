@@ -8,6 +8,10 @@ BFF_PaneBackdrop  = {
 
 BFF_FrameBase = {}
 
+BFF_FrameBase.SetParent = function(self,parent)
+    self.frame:SetParent(parent.frame or parent)
+end
+
 BFF_FrameBase.SetSize = function(self,w,h)
     self.frame:SetSize(w,h)
 end
@@ -25,10 +29,12 @@ BFF_FrameBase.SetPoint = function(self,...)
 end
 
 BFF_FrameBase.Show = function(self)
+    self.shown = true
     self.frame:Show()
 end
 
 BFF_FrameBase.Hide = function(self)
+    self.shown = false
     self.frame:Hide()
 end
 

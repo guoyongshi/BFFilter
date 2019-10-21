@@ -25,10 +25,11 @@ bfwf_dungeons = {
     {name='斯坦索姆(55 ~ 60)',lmin=55,lmax=60,sel=true,keys={'stsm','斯坦'}},
 
     {name='祖尔格拉布(团)',lmin=60,lmax=60,sel=false,keys={'zg','祖格'}},
-    {name='安其拉废墟(团)',lmin=60,lmax=60,sel=false,keys={'aq','安其拉'}},
+    {name='安其拉废墟(团)',lmin=60,lmax=60,sel=false,keys={'fx','安其拉','废墟'}},
     {name='熔火之心(团)',lmin=60,lmax=60,sel=false,keys={'mc','熔火之心'}},
-    {name='奥妮克希亚的巢穴(团)',lmin=60,lmax=60,sel=false,keys={'ol','奥妮','巢穴'}},
+    {name='奥妮克希亚的巢穴(团)',lmin=60,lmax=60,sel=false,keys={'黑龙','ol','奥妮','巢穴'}},
     {name='黑翼之巢(团)',lmin=60,lmax=60,sel=false,keys={'bl','黑翼'}},
+    {name='其拉神殿(团)',lmin=60,lmax=60,sel=false,keys={'taq','神殿','其拉神'}},
     {name='纳克萨玛斯(团)',lmin=60,lmax=60,sel=false,keys={'naxx','纳克','萨玛斯'}},
 }
 
