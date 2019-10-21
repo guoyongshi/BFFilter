@@ -121,8 +121,8 @@ local function chat_message_filter(chatFrame, event, message,...)
     if BFWC_Filter_SavedConfigs.reducemsg then
         trim,_msg = bfwf_trim_message(message)
     end
-    if trim>0 then
-        message = _msg .. '|r|cff4f4206[-' .. trim .. ']|r'
+    if trim>0 and BFWC_Filter_SavedConfigs.enable_debug then
+        message = _msg .. '|r|cffbb9e75[-' .. trim .. ']|r'
     end
     local lmessage = string.lower(message)
     if BFWC_Filter_SavedConfigs.blacklist_enable then

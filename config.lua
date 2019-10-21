@@ -186,6 +186,7 @@ local function whisper_level_duty()
     end)
 end
 
+local debug_data = {}
 -- https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
 local config_options = {
     type = 'group',
@@ -620,20 +621,49 @@ local config_options = {
                 }
             }
         },
---[[
-        organize = {
+
+        debug = {
             type = 'group',
-            name = '我要组队',
-            order = 5,
+            name = '调试',
+            order = 10,
             width = 'full',
+            hidden = function() return not BFWC_Filter_SavedConfigs.enable_debug end,
             args = {
-                desc1 = {
-                    type = 'description',
-                    name = '|cffbb9e75 敬请期待 |r',
+                split_input={
+                    type = 'input',
+                    name = '信息拆分',
+                    multiline = true,
+                    width = 'full',
+                    get = function(info) return debug_data.msg_to_split end,
+                    set = function(info,val)
+                        a={string.byte(val,1,-1)}
+                        print(table.concat(a,','))
+                        debug_data.msg_to_split=val end,
                     order = 1,
                 },
+                split_result = {
+                    type = 'input',
+                    name = '结果',
+                    disabled = true,
+                    multiline = true,
+                    get = function()
+                        return table.concat(debug_data.msg_split_res or {},',')
+                    end,
+                    set = function() end,
+                    width = 'full',
+                    order = 2
+                },
+                split_btn = {
+                    type = 'execute',
+                    name = '拆分',
+                    func = function()
+                        debug_data.msg_split_res = bff_msg_split(debug_data.msg_to_split or '') or {}
+                        print(table.concat(debug_data.msg_split_res or {},','))
+                    end,
+                    order = 3
+                }
             }
-        }--]]
+        },
     }
 }
 
