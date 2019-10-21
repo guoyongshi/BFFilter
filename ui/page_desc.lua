@@ -1,17 +1,17 @@
 
+function BFFPage_Desc(parent)
+    local box = BFF_ListLayout(parent)
+    local cb = BFF_CheckBox(UIParent,'名字要长。。。。。。。。名字要长。。。。。。。。名字要长。。。。。。。。\n名字要长。。。。。。。。名字要长。。。。。。。。名字要长。。。。。。。。')
 
-local Type, Version = "BFFPageDesc", 26
-local AceGUI = LibStub and LibStub("AceGUI-3.0", true)
-if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
+    box:AddChild(cb)
+    for i=1,30 do
+        local btn = CreateFrame('Button',nil,UIParent,'UIPanelButtonTemplate')
+        btn:SetSize(100,30)
+        btn:SetText('按钮'..i)
 
-local CreateFrame, UIParent = CreateFrame, UIParent
+        box:AddChild(btn)
+    end
 
-local function Constructor()
-    local page = AceGUI:Create('SimpleGroup')
-
-
-    return page
+    return box
 end
-
-AceGUI:RegisterWidgetType(Type, Constructor, Version)
 

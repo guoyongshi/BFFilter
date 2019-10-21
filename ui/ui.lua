@@ -1,15 +1,13 @@
 
-local gui = LibStub('AceGUI-3.0')
 local dlg
 function bfwf_toggle_options_dlg()
     if dlg and dlg:IsShown() then
         dlg:Hide()
-        dlg = nil
     else
         if not dlg then
-            dlg = gui:Create('BFFOptionsDialog')
+            dlg = BFF_OptionsDialog()
         end
-        dlg:SetLayout('Bfflayout')  --放构造里会被冲掉
+        dlg:SetTitle('组队频道信息过滤器')
         dlg:Show()
     end
 end

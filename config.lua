@@ -122,7 +122,11 @@ local classes = {
 
 function bfwf_myinfo(d1,d2)
     local info = ''
-    info = info .. (UnitLevel("player") or '??') .. '级'
+    local level = UnitLevel("player")
+    if level and level<60 then
+        info = info .. level .. '级'
+    end
+
     local class = classes[bfwf_player.class]
     if bfwf_player.classes == 1 then
         info = info .. class[1]
@@ -614,6 +618,7 @@ local config_options = {
                             type = 'execute',
                             name = '发送',
                             order = 4,
+                            width = 'half',
                             disabled = function(info) return not last_select_team_leader end,
                             func = whisper_level_duty
                         }
