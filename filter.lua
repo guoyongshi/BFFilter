@@ -116,7 +116,6 @@ local function chat_message_filter(chatFrame, event, message,...)
         local last_time = last_show_message[playerguid] and last_show_message[playerguid].time or 0
         local last_line = last_show_message[playerguid] and last_show_message[playerguid].line or 0
         if (now-last_time) < BFWC_Filter_SavedConfigs.interval and line ~= last_line then
-            print('频繁',line)
             last_return = true
             return true
         else
