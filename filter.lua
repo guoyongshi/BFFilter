@@ -61,6 +61,9 @@ end
 --每条消息都有不同的行号(line)
 --修改消息：return false,newmsg, from, a, b, c, d, e, chnum, chname, f,line,...
 --fullname不一定能完整取到，有时服务器名取不到。即使同一个人，刚才能取到，现在不一定能取到
+local last_line_number = 0
+local last_return
+local last_message
 local function chat_message_filter(chatFrame, event, message,...)
     if not BFWC_Filter_SavedConfigs.enable then
         return false
@@ -99,11 +102,22 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false
     end
 
+    if line == last_line_number then
+        if last_return then
+            return true
+        end
+        return false,last_message,...
+    end
+    last_return = false
+    last_line_number = line
+
     if BFWC_Filter_SavedConfigs.interval>0 then
         local now = GetTime()
         local last_time = last_show_message[playerguid] and last_show_message[playerguid].time or 0
         local last_line = last_show_message[playerguid] and last_show_message[playerguid].line or 0
         if (now-last_time) < BFWC_Filter_SavedConfigs.interval and line ~= last_line then
+            print('频繁',line)
+            last_return = true
             return true
         else
             last_show_message[playerguid] = { time = now, line = line}
@@ -112,7 +126,19 @@ local function chat_message_filter(chatFrame, event, message,...)
 
     if BFWC_Filter_SavedConfigs.hide_enter_leave then
         if event == CHAT_MSG_CHANNEL_JOIN or event == CHAT_MSG_CHANNEL_LEAVE then
+            last_return = true
             return true
+        end
+    end
+
+    local lmessage = string.lower(message)
+    if BFWC_Filter_SavedConfigs.blacklist_enable then
+        for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
+            local lk = string.lower(k)
+            if lk:len()>0 and string.find(lmessage,lk) then
+                last_return = true
+                return true
+            end
         end
     end
 
@@ -120,24 +146,16 @@ local function chat_message_filter(chatFrame, event, message,...)
     local _msg = ''
     if BFWC_Filter_SavedConfigs.reducemsg then
         trim,_msg = bfwf_trim_message(message)
-    end
-    if trim>0 then
-        if BFWC_Filter_SavedConfigs.enable_debug then
-            message = _msg .. '|r|cffbb9e75[-' .. trim .. ']|r'
-        else
-            message = _msg
-        end
-    end
-    local lmessage = string.lower(message)
-    if BFWC_Filter_SavedConfigs.blacklist_enable then
-        for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
-            local lk = string.lower(k)
-            if lk:len()>0 and string.find(lmessage,lk) then
-                return true
+        if trim>0 then
+            if BFWC_Filter_SavedConfigs.enable_debug then
+                message = _msg .. '|r|cffbb9e75[-' .. trim .. ']|r'
+            else
+                message = _msg
             end
         end
     end
 
+    last_message = message
     for _,d in ipairs(bfwf_dungeons) do
         if BFWC_Filter_SavedConfigs.dungeons[d.name] then
             for _,k in ipairs(d.keys) do
@@ -164,10 +182,15 @@ local function chat_message_filter(chatFrame, event, message,...)
         end
     end
 
-    if trim>0 and not BFWC_Filter_SavedConfigs.whiteonly then
-        return false,message, ...
+    if BFWC_Filter_SavedConfigs.whiteonly then
+        last_return = true
+        return true
     end
-    return BFWC_Filter_SavedConfigs.whiteonly
+
+    if trim > 0 then
+        return false,message,...
+    end
+    return false
 end
 
 bfwf_chat_filter_init = function()

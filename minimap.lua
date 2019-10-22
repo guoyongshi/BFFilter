@@ -3,7 +3,7 @@ local minimap_icon_texture
 local cfgdlg = LibStub("AceConfigDialog-3.0")
 local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("GYSGroupChannelFilter", {
     type = "data source",
-    text = "SpellCastingHelper",
+    text = "组队助手",
     icon = "Interface\\Icons\\INV_Misc_MissileSmall_Green",
     OnClick = function(self,button)
         if button == 'LeftButton' then
