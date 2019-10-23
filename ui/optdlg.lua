@@ -143,6 +143,19 @@ local function create_sizzer(dlg)
     line2:SetTexCoord(0.05 - x, 0.5, 0.05, 0.5 + x, 0.05, 0.5 - x, 0.5 + x, 0.5)
 end
 
+local function onFrameSizeChanged(container)
+    local w = container:GetWidth()
+    local h = container:GetHeight()
+    if not w or not h then
+        return
+    end
+
+    for _,page in ipairs(container.obj.pages) do
+        if page.page.selected and page.page.OnPageResize then
+            page.page:OnPageResize(w,h)
+        end
+    end
+end
 local function create_page_container(dlg,lb)
     local pagecontainer = CreateFrame('Frame',nil,dlg)
     pagecontainer:SetPoint('TOPLEFT',lb.frame,'TOPRIGHT',0,0)
@@ -150,6 +163,8 @@ local function create_page_container(dlg,lb)
     pagecontainer:SetBackdrop(BFF_PaneBackdrop)
     pagecontainer:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
     pagecontainer:SetBackdropBorderColor(0.4, 0.4, 0.4)
+
+    pagecontainer:SetScript('OnSizeChanged',onFrameSizeChanged)
 
     return pagecontainer
 end
@@ -235,6 +250,7 @@ function BFF_OptionsDialog()
 
     close1.obj = widget
     close2.obj = widget
+    pagecontainer.obj = widget
 
     return widget
 end
