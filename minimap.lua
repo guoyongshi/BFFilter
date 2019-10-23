@@ -2,9 +2,9 @@
 local minimap_icon_texture
 local cfgdlg = LibStub("AceConfigDialog-3.0")
 local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("GYSGroupChannelFilter", {
-    type = "data source",
+    type = "launcher",
     text = "组队助手",
-    icon = "Interface\\Icons\\INV_Misc_MissileSmall_Green",
+    icon = "Interface\\AddOns\\BFFilter\\texture\\minimap",
     OnClick = function(self,button)
         if button == 'LeftButton' then
             bfwf_toggle_config_dialog()

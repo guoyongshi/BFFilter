@@ -16,7 +16,7 @@ local function is_exists(tbl,key)
     return false
 end
 local function blacklist_init()
-    if BFWC_Filter_SavedConfigs.blacklist then
+    if BFWC_Filter_SavedConfigs_G.blacklist then
         return
     end
 
