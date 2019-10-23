@@ -4,6 +4,56 @@ local last_show_message = {
 }
 
 local dirty = false
+local _G = _G
+
+local function get_whisper_frame()
+    for i=1,NUM_CHAT_WINDOWS do
+        local name,_=GetChatWindowInfo(i)
+        if name == '私聊' or name == '私' or name == '密' then
+            return ''..i
+        end
+    end
+    return nil
+end
+local function add_msgto_chatframe(name,msg)
+    local num = BFWC_Filter_SavedConfigs.white_to_chatframe_num or get_whisper_frame()
+    if not num then
+        return
+    end
+    local chatframe = _G['ChatFrame' .. num]
+    if not chatframe then
+        return
+    end
+
+    if not BFWC_Filter_SavedConfigs.white_to_chatframe_num then
+        BFWC_Filter_SavedConfigs.white_to_chatframe_num = num
+    end
+
+    local color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
+    local tlcolor = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.hex
+
+    local _msg = '|c' .. tlcolor ..'[|Hplayer:' ..name.. '|h' ..name.. '|h]:|r'
+    _msg = _msg .. '|c' .. color .. msg .. '|r'
+    chatframe:AddMessage(_msg)
+
+    if BFWC_Filter_SavedConfigs.new_msg_flash then
+        if not chatframe:IsShown() then
+            FCF_StartAlertFlash(chatframe)
+        end
+    end
+end
+
+local function to_short_name(fullname)
+    local name
+    local sp,_ = string.find(fullname,'-')
+    if sp then
+        name = string.sub(fullname,1,sp-1)
+    else
+        name = fullname
+    end
+
+    return name
+end
 
 local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
     local add_to_log = true
@@ -22,6 +72,10 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
         return
     end
 
+    if not shortname then
+        shortname = to_short_name(fullname)
+    end
+    add_msgto_chatframe(shortname,message)
     local idx = 0
     dirty = true
     for i = 1, #bfwf_chat_team_log do
@@ -64,6 +118,7 @@ end
 local last_line_number = 0
 local last_return
 local last_message
+local last_trim = 0
 local function chat_message_filter(chatFrame, event, message,...)
     if not BFWC_Filter_SavedConfigs.enable then
         return false
@@ -106,6 +161,9 @@ local function chat_message_filter(chatFrame, event, message,...)
         if last_return then
             return true
         end
+        if last_trim == 0 then
+            return false
+        end
         return false,last_message,...
     end
     last_return = false
@@ -132,7 +190,7 @@ local function chat_message_filter(chatFrame, event, message,...)
 
     local lmessage = string.lower(message)
     if BFWC_Filter_SavedConfigs.blacklist_enable then
-        for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
+        for _,k in ipairs(BFWC_Filter_SavedConfigs_G.blacklist) do
             local lk = string.lower(k)
             if lk:len()>0 and string.find(lmessage,lk) then
                 last_return = true
@@ -143,8 +201,10 @@ local function chat_message_filter(chatFrame, event, message,...)
 
     local trim = 0
     local _msg = ''
+    last_trim = 0
     if BFWC_Filter_SavedConfigs.reducemsg then
         trim,_msg = bfwf_trim_message(message)
+        last_trim = trim
         if trim>0 then
             if BFWC_Filter_SavedConfigs.enable_debug then
                 message = _msg .. '|r|cffbb9e75[-' .. trim .. ']|r'

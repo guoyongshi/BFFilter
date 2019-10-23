@@ -7,16 +7,39 @@ local function whitelist_init()
     BFWC_Filter_SavedConfigs.whitelist = { }
 end
 
+local function is_exists(tbl,key)
+    for _,k in ipairs(tbl) do
+        if k == key then
+            return true
+        end
+    end
+    return false
+end
 local function blacklist_init()
     if BFWC_Filter_SavedConfigs.blacklist then
         return
     end
 
     BFWC_Filter_SavedConfigs.blacklist_enable = true
-    BFWC_Filter_SavedConfigs.blacklist = {
-        '/组','一组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
-        'VX','免费','ZFB','收G'
-    }
+    if BFWC_Filter_SavedConfigs.blacklist then
+        if BFWC_Filter_SavedConfigs_G.blacklist then
+            for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
+                if not is_exists(BFWC_Filter_SavedConfigs_G.blacklist,k) then
+                    table.insert(BFWC_Filter_SavedConfigs_G.blacklist,k)
+                end
+            end
+        else
+            BFWC_Filter_SavedConfigs_G.blacklist = BFWC_Filter_SavedConfigs.blacklist
+        end
+
+        BFWC_Filter_SavedConfigs.blacklist = nil
+    else
+        BFWC_Filter_SavedConfigs_G.blacklist = {
+            '/组','一组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
+            'VX','免费','ZFB','收G'
+        }
+    end
+
 end
 
 local function dungeons_init()
@@ -50,8 +73,13 @@ local function reset_configs()
         autojoin_bigfoot = true,
         minimap = { hide = false},
         player = {},
-        dungeons = {}
+        dungeons = {},
+        white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165},
+        white_to_chatframe_color={a=1,r=0.937,g=0.138,b=0.883},
     }
+    BFWC_Filter_SavedConfigs.white_to_chatframe = true
+    BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165,hex='ff11d72a'}
+    BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
     dungeons_init()
     whitelist_init()
     blacklist_init()
@@ -190,6 +218,13 @@ local function whisper_level_duty()
     end)
 end
 
+local function hex_color(r,g,b,a)
+    local hex = string.format('%x',math.floor(255*a))
+    hex = hex .. string.format('%x',math.floor(255*r))
+    hex = hex .. string.format('%x',math.floor(255*g))
+    hex = hex .. string.format('%x',math.floor(255*b))
+    return hex
+end
 local debug_data = {}
 -- https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
 local config_options = {
@@ -373,6 +408,121 @@ local config_options = {
                     width = 'full',
                     get = function() return BFWC_Filter_SavedConfigs.whiteonly end,
                     set = function(info,val) BFWC_Filter_SavedConfigs.whiteonly=val end
+                },
+
+                addtochatframe = {
+                    type = 'toggle',
+                    name = '白名单过滤出来的信息添加到聊天窗口',
+                    order = 12,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.white_to_chatframe end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.white_to_chatframe=val end
+                },
+
+                chatframe = {
+                    type = 'select',
+                    name = '聊天窗口',
+                    order = 13,
+                    values = function()
+                        local arr = {}
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name and string.len(name)>0 then
+                                arr[''..i] = name
+                            end
+                        end
+                        return arr
+                    end,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.white_to_chatframe_num
+                    end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.white_to_chatframe_num=val
+                    end,
+                    disabled = function() return not BFWC_Filter_SavedConfigs.white_to_chatframe end
+                },
+
+                tlcolor = {
+                    type = 'color',
+                    name = '队长颜色',
+                    order = 14,
+                    hasAlpha = true,
+                    width=0.75,
+                    get = function()
+                        local r, g, b, a
+                        r = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.r or 1
+                        g = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.g or 1
+                        b = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.b or 1
+                        a = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.a or 1
+
+                        return r, g, b, a
+                    end,
+                    set = function(info, r, g, b, a)
+                        r = r or 1
+                        g = g or 1
+                        b = b or 1
+                        a = a or 1
+                        BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor = {
+                            r = r, g = g, b = b, a = a, hex = hex_color(r, g, b, a)
+                        }
+                    end
+                },
+                chatcolor = {
+                    type = 'color',
+                    name = '文字颜色',
+                    order = 14.1,
+                    width=0.75,
+                    hasAlpha = true,
+                    get = function()
+                        local r,g,b,a
+                        r = BFWC_Filter_SavedConfigs.white_to_chatframe_color.r or 1
+                        g = BFWC_Filter_SavedConfigs.white_to_chatframe_color.g or 1
+                        b = BFWC_Filter_SavedConfigs.white_to_chatframe_color.b or 1
+                        a = BFWC_Filter_SavedConfigs.white_to_chatframe_color.a or 1
+                        return r,g,b,a
+                    end,
+                    set = function(info,r,g,b,a)
+                        r = r or 1
+                        g = g or 1
+                        b = b or 1
+                        a = a or 1
+                        BFWC_Filter_SavedConfigs.white_to_chatframe_color = {
+                            r=r,g=g,b=b,a=a,hex = hex_color(r,g,b,a)
+                        }
+                    end
+                },
+
+                flash = {
+                    type = 'toggle',
+                    name = '新信息提醒',
+                    order = 14.2,
+                    get = function() return BFWC_Filter_SavedConfigs.new_msg_flash end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.new_msg_flash=val end
+                },
+                test = {
+                    type = 'execute',
+                    name = '测试',
+                    order = 15,
+                    width = 'half',
+                    func = function()
+                        if not BFWC_Filter_SavedConfigs.white_to_chatframe_num then
+                            return
+                        end
+
+                        local chatframe = _G['ChatFrame' .. BFWC_Filter_SavedConfigs.white_to_chatframe_num]
+                        if not chatframe then
+                            return
+                        end
+
+                        local color = 'fff137ea'
+                        if BFWC_Filter_SavedConfigs.white_to_chatframe_color and BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex then
+                            color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
+                        end
+                        local msg = '|cff11d72a[|Hplayer:牛夫人|h牛夫人|h]:|r'
+                        msg = msg .. '|c' .. color .. 'abcd|r'
+                        chatframe:AddMessage(msg)
+                    end,
+                    hidden = function() return not BFWC_Filter_SavedConfigs.enable_debug end
                 }
             }
         },
@@ -403,10 +553,10 @@ local config_options = {
                     order = 2,
                     disabled = function() return not BFWC_Filter_SavedConfigs.blacklist_enable end,
                     get = function()
-                        return table.concat(BFWC_Filter_SavedConfigs.blacklist,',')
+                        return table.concat(BFWC_Filter_SavedConfigs_G.blacklist,',')
                     end,
                     set = function(info,val)
-                        BFWC_Filter_SavedConfigs.blacklist = bfwf_split_str(val)
+                        BFWC_Filter_SavedConfigs_G.blacklist = bfwf_split_str(val)
                     end
                 }
             }
@@ -695,6 +845,14 @@ bfwf_configs_init = function()
     whitelist_init()
     blacklist_init()
     local args = config_options.args.whitelist.args
+
+    if not BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor then
+        BFWC_Filter_SavedConfigs.white_to_chatframe = true
+        BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165,hex='ff11d72a'}
+    end
+    if not BFWC_Filter_SavedConfigs.white_to_chatframe_color then
+        BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
+    end
 
     local order = 10
     for _,d in ipairs(bfwf_dungeons) do

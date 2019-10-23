@@ -1,5 +1,6 @@
 BFWC_Filter_SavedConfigs = {
 }
+BFWC_Filter_SavedConfigs_G = {}
 
 bfwf_big_foot_world_channel_joined = false
 
