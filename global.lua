@@ -6,12 +6,12 @@ bfwf_big_foot_world_channel_joined = false
 
 bfwf_dungeons = {
     {name='怒焰裂谷(13 ~ 18)',lmin=13,lmax=18,sel=true,keys={'ny','怒焰'}},
-    {name='哀嚎洞穴(17 ~ 24)',lmin=17,lmax=24,sel=true,keys={'ah','哀嚎洞穴'}},
-    {name='死亡矿井(17 ~ 26)',lmin=17,lmax=26,sel=true,keys={'swkj','矿井'}},
+    {name='哀嚎洞穴(17 ~ 24)',lmin=17,lmax=24,sel=true,keys={'ah','哀嚎洞穴','哀嚎'}},
+    {name='死亡矿井(17 ~ 26)',lmin=17,lmax=26,sel=true,keys={'swkj','矿井','SK','死矿'}},
     {name='影牙城堡(22 ~ 30)',lmin=22,lmax=30,sel=true,keys={'yy','影牙'}},
     {name='黑暗深渊(24 ~ 32)',lmin=24,lmax=32,sel=true,keys={'hasy','黑暗深渊'}},
     {name='监狱(24 ~ 32)',lmin=24,lmax=32,sel=true,keys={'jy','监狱'}},
-    {name='诺莫瑞根(29 ~ 38)',lmin=29,lmax=38,sel=true,keys={'nmrg','诺莫瑞根'}},
+    {name='诺莫瑞根(29 ~ 38)',lmin=29,lmax=38,sel=true,keys={'nmrg','诺莫瑞根','矮子本','矮人本','矮人副本','矮子副本'}},
     {name='剃刀沼泽(29 ~ 38)',lmin=29,lmax=38,sel=true,keys={'tdzz','剃刀沼泽'}},
     {name='血色修道院(26 ~ 45)',lmin=26,lmax=45,sel=true,keys={'xs','血色','墓地','图书馆','军械库','武器库','教堂'}},
     {name='剃刀高地(37 ~ 46)',lmin=37,lmax=46,sel=true,keys={'tdgd','剃刀高地'}},
