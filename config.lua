@@ -76,12 +76,14 @@ local function reset_configs()
         dungeons = {},
         white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165},
         white_to_chatframe_color={a=1,r=0.937,g=0.138,b=0.883},
+        blacklist_enable = true
     }
     BFWC_Filter_SavedConfigs.white_to_chatframe = true
     BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165,hex='ff11d72a'}
     BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
     dungeons_init()
     whitelist_init()
+    BFWC_Filter_SavedConfigs_G.blacklist = nil
     blacklist_init()
 end
 
