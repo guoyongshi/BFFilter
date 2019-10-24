@@ -1,3 +1,5 @@
+
+BFF_ADDON_NAME = 'BFFilter'
 BFWC_Filter_SavedConfigs = {
 }
 BFWC_Filter_SavedConfigs_G = {}

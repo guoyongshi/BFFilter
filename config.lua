@@ -342,9 +342,9 @@ local config_options = {
                     set = function(info, val)
                         BFWC_Filter_SavedConfigs.minimap.hide = not val
                         if val then
-                            LibStub("LibDBIcon-1.0"):Show("GYSGroupChannelFilter")
+                            LibStub("LibDBIcon-1.0"):Show(BFF_ADDON_NAME)
                         else
-                            LibStub("LibDBIcon-1.0"):Hide("GYSGroupChannelFilter")
+                            LibStub("LibDBIcon-1.0"):Hide(BFF_ADDON_NAME)
                         end
                     end,
                     get = function(info)
@@ -410,9 +410,32 @@ local config_options = {
                     set = function(info,val) BFWC_Filter_SavedConfigs.whiteonly=val end
                 },
 
+                classcolor = {
+                    type = 'toggle',
+                    name = '使用职业颜色',
+                    order = 11.1,
+                    width = 'full',
+                    get = function()
+                        local v,_ = GetCVarInfo('chatClassColorOverride')
+                        if v == '0' then
+                            return true
+                        end
+                        return false
+                    end,
+                    set = function(info,val)
+                        if val then
+                            BFWC_Filter_SavedConfigs.use_class_color = true
+                            SetCVar("chatClassColorOverride", "0")
+                        else
+                            BFWC_Filter_SavedConfigs.use_class_color = false
+                            SetCVar("chatClassColorOverride", "1")
+                        end
+                    end
+                },
+
                 addtochatframe = {
                     type = 'toggle',
-                    name = '白名单过滤出来的信息添加到聊天窗口',
+                    name = '白名单过滤出来的信息添加到指定聊天窗口',
                     order = 12,
                     width = 'full',
                     get = function() return BFWC_Filter_SavedConfigs.white_to_chatframe end,
@@ -843,8 +866,8 @@ bfwf_configs_init = function()
             set = function(info,val) BFWC_Filter_SavedConfigs.dungeons[info[2]] = val end
         }
     end
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("GYSGroupChannelFilter", config_options)
-    LibStub("AceConfigDialog-3.0"):AddToBlizOptions("GYSGroupChannelFilter", "组队频道过滤")
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(BFF_ADDON_NAME, config_options)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(BFF_ADDON_NAME, "组队频道过滤")
 end
 
 --[[
@@ -862,7 +885,7 @@ local cfgdlg = LibStub("AceConfigDialog-3.0")
 local close_button = nil
 local function close_dialog()
     if cfgdlg then
-        cfgdlg:Close('GYSGroupChannelFilter')
+        cfgdlg:Close(BFF_ADDON_NAME)
     end
 end
 local function create_close_button()
@@ -870,11 +893,11 @@ local function create_close_button()
         return
     end
 
-    if not cfgdlg.OpenFrames or not cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
+    if not cfgdlg.OpenFrames or not cfgdlg.OpenFrames[BFF_ADDON_NAME] then
         return
     end
 
-    local frame = cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame
+    local frame = cfgdlg.OpenFrames[BFF_ADDON_NAME].frame
 
     local deco = CreateFrame("Frame", nil, frame)
     deco:SetSize(17, 40)
@@ -935,37 +958,37 @@ end
 bfwf_toggle_config_dialog = function()
     local w = BFWC_Filter_SavedConfigs.dlg_width or 900
     local h = BFWC_Filter_SavedConfigs.dlg_height or 600
-    if cfgdlg.OpenFrames and cfgdlg.OpenFrames['GYSGroupChannelFilter'] then
-        if cfgdlg.OpenFrames['GYSGroupChannelFilter']:IsShown() then
-            cfgdlg:Close('GYSGroupChannelFilter')
+    if cfgdlg.OpenFrames and cfgdlg.OpenFrames[BFF_ADDON_NAME] then
+        if cfgdlg.OpenFrames[BFF_ADDON_NAME]:IsShown() then
+            cfgdlg:Close(BFF_ADDON_NAME)
             old_on_width_set_func = nil
             old_on_height_set_func = nil
         else
-            cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
-            cfgdlg:Open("GYSGroupChannelFilter")
-            cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
+            cfgdlg:SetDefaultSize(BFF_ADDON_NAME, w, h)
+            cfgdlg:Open(BFF_ADDON_NAME)
+            cfgdlg.OpenFrames[BFF_ADDON_NAME].frame:SetFrameStrata("MEDIUM")
             create_close_button()
             if not old_on_width_set_func then
-                old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+                old_on_width_set_func = cfgdlg.OpenFrames[BFF_ADDON_NAME].OnWidthSet
             end
             if not old_on_height_set_func then
-                old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+                old_on_height_set_func = cfgdlg.OpenFrames[BFF_ADDON_NAME].OnHeightSet
             end
-            cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
-            cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
+            cfgdlg.OpenFrames[BFF_ADDON_NAME].OnWidthSet = OnWidthSet
+            cfgdlg.OpenFrames[BFF_ADDON_NAME].OnHeightSet = OnHeightSet
         end
     else
-        cfgdlg:SetDefaultSize("GYSGroupChannelFilter", w, h)
-        cfgdlg:Open("GYSGroupChannelFilter")
-        cfgdlg.OpenFrames['GYSGroupChannelFilter'].frame:SetFrameStrata("MEDIUM")
+        cfgdlg:SetDefaultSize(BFF_ADDON_NAME, w, h)
+        cfgdlg:Open(BFF_ADDON_NAME)
+        cfgdlg.OpenFrames[BFF_ADDON_NAME].frame:SetFrameStrata("MEDIUM")
         create_close_button()
         if not old_on_width_set_func then
-            old_on_width_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet
+            old_on_width_set_func = cfgdlg.OpenFrames[BFF_ADDON_NAME].OnWidthSet
         end
         if not old_on_height_set_func then
-            old_on_height_set_func = cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet
+            old_on_height_set_func = cfgdlg.OpenFrames[BFF_ADDON_NAME].OnHeightSet
         end
-        cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnWidthSet = OnWidthSet
-        cfgdlg.OpenFrames['GYSGroupChannelFilter'].OnHeightSet = OnHeightSet
+        cfgdlg.OpenFrames[BFF_ADDON_NAME].OnWidthSet = OnWidthSet
+        cfgdlg.OpenFrames[BFF_ADDON_NAME].OnHeightSet = OnHeightSet
     end
 end

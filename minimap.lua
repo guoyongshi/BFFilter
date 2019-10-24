@@ -1,7 +1,6 @@
 
 local minimap_icon_texture
-local cfgdlg = LibStub("AceConfigDialog-3.0")
-local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject("GYSGroupChannelFilter", {
+local LDBCfg = LibStub("LibDataBroker-1.1"):NewDataObject(BFF_ADDON_NAME, {
     type = "launcher",
     text = "组队助手",
     icon = "Interface\\AddOns\\BFFilter\\texture\\minimap",
@@ -34,12 +33,12 @@ bfwf_minimap_button_init = function()
     if not dbicon then
         return
     end
-    dbicon:Register("GYSGroupChannelFilter", LDBCfg, BFWC_Filter_SavedConfigs.minimap)
-    if not dbicon:GetMinimapButton('GYSGroupChannelFilter') then
+    dbicon:Register(BFF_ADDON_NAME, LDBCfg, BFWC_Filter_SavedConfigs.minimap)
+    if not dbicon:GetMinimapButton(BFF_ADDON_NAME) then
         minimap_icon_texture = nil
         return
     end
-    minimap_icon_texture = dbicon:GetMinimapButton('GYSGroupChannelFilter').icon
+    minimap_icon_texture = dbicon:GetMinimapButton(BFF_ADDON_NAME).icon
 end
 
 bfwf_update_minimap_icon = function()

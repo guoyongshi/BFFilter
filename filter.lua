@@ -333,6 +333,6 @@ bfwf_update_config_dialog = function()
         return
     end
 	dirty = false
-	cfgreg:NotifyChange('GYSGroupChannelFilter')
+	cfgreg:NotifyChange(BFF_ADDON_NAME)
 end
 

@@ -1,5 +1,5 @@
 
-local BFFilter=LibStub("AceAddon-3.0"):NewAddon("GYSGroupChannelFilter", "AceConsole-3.0","AceTimer-3.0")
+local BFFilter=LibStub("AceAddon-3.0"):NewAddon(BFF_ADDON_NAME, "AceConsole-3.0","AceTimer-3.0")
 
 local function update_player_info()
     local _, class, _ = UnitClass('player')
@@ -26,6 +26,10 @@ end
 function BFFilter:OnEnable()
     if not self.timer then
         self.timer = self:ScheduleRepeatingTimer("OnCheck", 1)
+    end
+
+    if BFWC_Filter_SavedConfigs.use_class_color then
+        SetCVar("chatClassColorOverride", "0")
     end
 
     if not bfwf_g_data.myid then
@@ -86,6 +90,10 @@ function BFFilter:OnCheck()
 end
 
 function BFFilter:CheckBigFootChannel()
+    --bug:飞行中大退再进来，聊天窗口的设置-》通用频道显示不全
+    if not HasFullControl() then
+        return
+    end
     local channels = { GetChannelList() }
     for _,k in ipairs(channels) do
         if k == '大脚世界频道' then
