@@ -32,7 +32,10 @@ local function add_msgto_chatframe(name,msg)
     local color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
     local tlcolor = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.hex
 
-    local _msg = '|c' .. tlcolor ..'[|Hplayer:' ..name.. '|h' ..name.. '|h]:|r'
+    local h,m=GetGameTime()
+    local s = math.floor(GetTime()%60)
+    local _msg = string.format('|cff189694%.2d:%.2d:%.2d|r',h,m,s)
+    _msg = _msg .. '|c' .. tlcolor ..'|Hplayer:' ..name.. '|h[' ..name.. ']|h|r:'
     _msg = _msg .. '|c' .. color .. msg .. '|r'
     chatframe:AddMessage(_msg)
 
