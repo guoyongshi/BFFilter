@@ -61,3 +61,7 @@ bfwf_chat_task_log = {}
 bfwf_g_data = {
     level = 0,
 }
+
+--玩家职业颜色缓存
+bfwf_player_color = {}
+

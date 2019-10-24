@@ -30,12 +30,15 @@ local function add_msgto_chatframe(name,msg)
     end
 
     local color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
-    local tlcolor = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.hex
+    local tlcolor = bfwf_player_color[name]
+    if not tlcolor then
+        tlcolor = '|cff11d72a'
+    end
 
     local h,m=GetGameTime()
     local s = math.floor(GetTime()%60)
     local _msg = string.format('|cff189694%.2d:%.2d:%.2d|r',h,m,s)
-    _msg = _msg .. '|c' .. tlcolor ..'|Hplayer:' ..name.. '|h[' ..name.. ']|h|r:'
+    _msg = _msg ..'|Hplayer:' .. name .. '|h[' .. tlcolor .. name .. '|r]|h:'
     _msg = _msg .. '|c' .. color .. msg .. '|r'
     chatframe:AddMessage(_msg)
 
@@ -113,6 +116,42 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
         table.remove(bfwf_chat_team_log, oldix, 1)
     end
 end
+
+local _chatframe1_origin_addmessage
+
+local function get_name_color(msg)
+    local pos1,pos2=string.find(msg,'\124Hplayer:')
+    if not pos1 or not pos2 then
+        return
+    end
+    pos1,_ = string.find(msg,'%[',pos2)
+    if not pos1 then
+        return
+    end
+    local color = string.sub(msg,pos1+1,pos1+10)
+    if not color or string.len(color) ~= 10 then
+        return
+    end
+    pos2,_ = string.find(msg,'|r',pos1+11)
+    if not pos2 then
+        return
+    end
+    local name = string.sub(msg,pos1+11,pos2-1)
+    if not name or string.len(name) == 0 then
+        return
+    end
+
+    return name,color
+end
+local function __chatframe1_new_addmessage(chatframe,msg,...)
+    local name,color = get_name_color(msg)
+    if name and color then
+        bfwf_player_color[name] = color
+    end
+
+    _chatframe1_origin_addmessage(chatframe,msg,...)
+end
+
 --返回true拦截，false放行
 --同一条信息，过滤器会被多次调用，每个聊天标签一次(line相同)
 --每条消息都有不同的行号(line)
@@ -160,6 +199,12 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false
     end
 
+    if not _chatframe1_origin_addmessage then
+        if ChatFrame1 and ChatFrame1.AddMessage then
+            _chatframe1_origin_addmessage = ChatFrame1.AddMessage
+            ChatFrame1.AddMessage = __chatframe1_new_addmessage
+        end
+    end
     if line == last_line_number then
         if last_return then
             return true

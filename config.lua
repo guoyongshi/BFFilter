@@ -74,12 +74,10 @@ local function reset_configs()
         minimap = { hide = false},
         player = {},
         dungeons = {},
-        white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165},
         white_to_chatframe_color={a=1,r=0.937,g=0.138,b=0.883},
         blacklist_enable = true
     }
     BFWC_Filter_SavedConfigs.white_to_chatframe = true
-    BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165,hex='ff11d72a'}
     BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
     dungeons_init()
     whitelist_init()
@@ -444,31 +442,6 @@ local config_options = {
                     disabled = function() return not BFWC_Filter_SavedConfigs.white_to_chatframe end
                 },
 
-                tlcolor = {
-                    type = 'color',
-                    name = '队长颜色',
-                    order = 14,
-                    hasAlpha = true,
-                    width=0.75,
-                    get = function()
-                        local r, g, b, a
-                        r = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.r or 1
-                        g = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.g or 1
-                        b = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.b or 1
-                        a = BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor.a or 1
-
-                        return r, g, b, a
-                    end,
-                    set = function(info, r, g, b, a)
-                        r = r or 1
-                        g = g or 1
-                        b = b or 1
-                        a = a or 1
-                        BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor = {
-                            r = r, g = g, b = b, a = a, hex = hex_color(r, g, b, a)
-                        }
-                    end
-                },
                 chatcolor = {
                     type = 'color',
                     name = '文字颜色',
@@ -655,8 +628,12 @@ local config_options = {
                         for _,m in ipairs(bfwf_chat_team_log) do
                             local dt = GetTime()-m.time
                             if dt < 180 then
+                                local tlcolor = bfwf_player_color[m.name]
+                                if not tlcolor then
+                                    tlcolor = '|cff11d72a'
+                                end
                                 local text = '[|cff3ee157' .. bfwf_format_time(dt)
-                                text = text .. '|r |cff11d72a' .. m.name .. '|r ] '
+                                text = text .. '|r ' .. tlcolor .. m.name .. '|r ] '
                                 text = text .. '|cffb3f0e7' .. m.text ..'|r'
                                 --arr[#arr+1] = { text = text,id = m.playerid}
                                 arr[#arr+1] = {text = text,id = m.playerid,name=m.fullname,time=m.time}
@@ -848,11 +825,8 @@ bfwf_configs_init = function()
     blacklist_init()
     local args = config_options.args.whitelist.args
 
-    if not BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor then
-        BFWC_Filter_SavedConfigs.white_to_chatframe = true
-        BFWC_Filter_SavedConfigs.white_to_chatframe_tlcolor={a=1,r=0.067,g=0.843,b=0.165,hex='ff11d72a'}
-    end
     if not BFWC_Filter_SavedConfigs.white_to_chatframe_color then
+        BFWC_Filter_SavedConfigs.white_to_chatframe = true
         BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
     end
 
