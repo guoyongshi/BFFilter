@@ -225,7 +225,9 @@ local function hex_color(r,g,b,a)
     hex = hex .. string.format('%x',math.floor(255*b))
     return hex
 end
+
 local debug_data = {}
+local creating_team = false
 -- https://www.wowace.com/projects/ace3/pages/ace-config-3-0-options-tables
 local config_options = {
     type = 'group',
@@ -613,7 +615,7 @@ local config_options = {
 
         teamlog1 = {
             type = 'group',
-            name = '我要找队伍',
+            name = '找队伍',
             order = 4,
             width = 'full',
             args = {
@@ -779,10 +781,135 @@ local config_options = {
             }
         },
 
+        orgteam = {
+            type = 'group',
+            name = '组队',
+            order = 10,
+            width = 'full',
+            args = {
+                desc1 = {
+                    type = 'description',
+                    name = '发布信息，招募队员(信息自动发布到[|cffcc7832|Hchannel:大脚世界频道|h大脚世界频道|h|r])\n',
+                    order = 1,
+                    width = 'full'
+                },
+                task={
+                    type = 'select',
+                    name = '选择副本',
+                    style = 'dropdown',
+                    order = 2,
+                    values = function()
+                        local arr = {'自定义','任务队'}
+                        for _,d in ipairs(bfwf_dungeons) do
+                            local pos,_=string.find(d.name,'%(')
+                            if pos then
+                                table.insert(arr,'|cff0099ff' .. string.sub(d.name,1,pos-1) .. '|r')
+                            else
+                                table.insert(arr,'|cff0099ff' .. d.name .. '|r')
+                            end
+                        end
+                        return arr
+                    end,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.last_orgteam or 1
+                    end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.last_orgteam = val
+                    end
+                },
+                note={
+                    type = 'input',
+                    name = '备注、说明(限制30字，文明组队，不要带各种垃圾符号)',
+                    multiline = 3,
+                    width = 'full',
+                    order = 3,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.last_orgteam_note or ''
+                    end,
+                    set = function(info,val)
+                        local ws=bff_msg_split(val or '')
+                        if #ws>30 then
+                            BFWC_Filter_SavedConfigs.last_orgteam_note = table.concat(ws,'',1,30)
+                        else
+                            BFWC_Filter_SavedConfigs.last_orgteam_note = val or ''
+                        end
+                    end
+                },
+                msg={
+                    type = 'description',
+                    name = function()
+                        local msg = '自动发送的信息(间隔约15秒)：\n    '
+                        msg = msg .. bfwf_make_team_create_msg(true) .. '\n'
+                        return msg
+                    end,
+                    order = 3.1,
+                    width = 'full'
+                },
+                start={
+                    type = 'execute',
+                    order = 4,
+                    name = function()
+                        if bfwf_orging_team then
+                            return '完成'
+                        else
+                            return '开始'
+                        end
+                    end,
+                    func = function()
+                        if bfwf_orging_team then
+                            bfwf_finish_org_team()
+                            return
+                        end
+                        local idx=BFWC_Filter_SavedConfigs.last_orgteam
+                        if not idx then
+                            bfwf_msgbox('先选择组队目的')
+                            return
+                        end
+                        if string.len(BFWC_Filter_SavedConfigs.last_orgteam_note or '')==0 then
+                            bfwf_msgbox('备注信息不能为空')
+                            return
+                        end
+                        if idx == 1 then
+                            bfwf_org_team_count = 40
+                        elseif idx==2 then
+                            bfwf_org_team_count = 5
+                        else
+                            bfwf_org_team_count = bfwf_dungeons[idx-2].num
+                        end
+                        bfwf_orging_team = true
+                        bfwf_send_team_create_msg()
+                    end
+                },
+                autofin={
+                    type='toggle',
+                    name='满员自动结束',
+                    order=4.1,
+                    get=function()
+                        return BFWC_Filter_SavedConfigs.auto_fin_org_team~='no'
+                    end,
+                    set=function(info,val)
+                        if val then
+                            BFWC_Filter_SavedConfigs.auto_fin_org_team='yes'
+                        else
+                            BFWC_Filter_SavedConfigs.auto_fin_org_team='no'
+                        end
+                    end,
+                    disabled = function()
+                        if not BFWC_Filter_SavedConfigs.last_orgteam then
+                            return true
+                        end
+                        if BFWC_Filter_SavedConfigs.last_orgteam==1 then
+                            return true
+                        end
+                        return false
+                    end
+                }
+            }
+        },
         debug = {
             type = 'group',
             name = '调试',
-            order = 10,
+            order = 11,
             width = 'full',
             hidden = function() return not BFWC_Filter_SavedConfigs.enable_debug end,
             args = {
@@ -818,6 +945,13 @@ local config_options = {
                         print(table.concat(debug_data.msg_split_res or {},','))
                     end,
                     order = 3
+                },
+                test_btn = {
+                    type = 'execute',
+                    name = '测试',
+                    func = function()
+                    end,
+                    order=4
                 }
             }
         },
@@ -956,7 +1090,7 @@ local function OnHeightSet(self,height)
 end
 
 bfwf_toggle_config_dialog = function()
-    local w = BFWC_Filter_SavedConfigs.dlg_width or 900
+    local w = BFWC_Filter_SavedConfigs.dlg_width or 950
     local h = BFWC_Filter_SavedConfigs.dlg_height or 600
     if cfgdlg.OpenFrames and cfgdlg.OpenFrames[BFF_ADDON_NAME] then
         if cfgdlg.OpenFrames[BFF_ADDON_NAME]:IsShown() then

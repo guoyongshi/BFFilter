@@ -87,20 +87,25 @@ function BFFilter:OnCheck()
     end
 
     bfwf_update_config_dialog()
+
+    bfwf_send_team_create_msg()
 end
 
+local bf_channel_num
 function BFFilter:CheckBigFootChannel()
-    --bug:飞行中大退再进来，聊天窗口的设置-》通用频道显示不全
-    if not HasFullControl() then
-        return
-    end
     local channels = { GetChannelList() }
-    for _,k in ipairs(channels) do
+    for i,k in ipairs(channels) do
         if k == '大脚世界频道' then
+            bf_channel_num = channels[i-1]
             bfwf_big_foot_world_channel_joined = true
             return
         end
     end
+    --bug:飞行中大退再进来，聊天窗口的设置-》通用频道显示不全
+    if not HasFullControl() then
+        return
+    end
+
 
     bfwf_big_foot_world_channel_joined = false
     if BFWC_Filter_SavedConfigs.autojoin_bigfoot then
@@ -132,4 +137,96 @@ end
 function BFFilter:OnLevelUp()
     last_level = bfwf_player.level
     bfwf_update_dungeons_filter()
+end
+
+--SendChatMessage不能随便设置文字颜色，物品、技能等链接可以带颜色，但链接的颜色和名称
+--不能改，改了就会变成普通文字
+bfwf_make_team_create_msg = function(avoid_kick)
+    local msg = ''
+    local idx = BFWC_Filter_SavedConfigs.last_orgteam
+    if not idx then
+        return ''
+    end
+
+    local orig_msg = BFWC_Filter_SavedConfigs.last_orgteam_note
+    if not orig_msg or string.len(orig_msg)==0 then
+        return ''
+    end
+
+    if avoid_kick then
+        local ws = bff_msg_split(BFWC_Filter_SavedConfigs.last_orgteam_note)
+        local cs = {'+','-','~','.','_','='}
+        local pos = math.random(1,#ws+1)
+        table.insert(ws,pos,cs[math.random(1,#cs)])
+        pos = math.random(1,#ws+1)
+        table.insert(ws,pos,cs[math.random(1,#cs)])
+        orig_msg = table.concat(ws)
+    end
+
+    if idx==1 then
+        return orig_msg
+    end
+    if idx==2 then
+        return '任务队,' .. orig_msg
+    end
+
+    local pos,_ = string.find(bfwf_dungeons[idx-2].name,'%(')
+    local name
+    if pos then
+        name = string.sub(bfwf_dungeons[idx-2].name,1,pos-1)
+    else
+        name = bfwf_dungeons[idx-2].name
+    end
+
+    msg = '[' .. name .. '],' .. orig_msg
+    return msg
+end
+
+local last_team_msg_time = 0
+
+bfwf_finish_org_team = function()
+    if not bfwf_orging_team then
+        return
+    end
+    bfwf_orging_team = false
+    DEFAULT_CHAT_FRAME:AddMessage('|cff0099ff[BFFilter]|r|cffffd100组队完成！！！！！！|r')
+    local msg = bfwf_make_team_create_msg(true)
+    if string.len(msg or '')==0 then
+        return
+    end
+    if not bf_channel_num then
+        return
+    end
+    msg = '[已满员]'..msg
+    SendChatMessage(msg,'CHANNEL',nil,bf_channel_num)
+end
+
+bfwf_send_team_create_msg = function()
+
+    if not bfwf_orging_team then
+        return
+    end
+
+    local nmem = GetNumGroupMembers()
+    if nmem>=bfwf_org_team_count and BFWC_Filter_SavedConfigs.auto_fin_org_team~='no' then
+        bfwf_finish_org_team()
+        return
+    end
+
+    local msg = bfwf_make_team_create_msg(true)
+    if string.len(msg or '')==0 then
+        return
+    end
+
+    if not bf_channel_num then
+        return
+    end
+    local now = GetTime()
+    local dt = now-last_team_msg_time
+    if dt<10 then
+        return
+    end
+    last_team_msg_time = now
+
+    SendChatMessage(msg,'CHANNEL',nil,bf_channel_num)
 end

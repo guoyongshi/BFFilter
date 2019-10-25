@@ -24,7 +24,7 @@ function bff_msg_split(msg,arr)
     local bs = {string.byte(msg,1,-1)}
     local i = 1
     arr = arr or {}
-    while i<#bs do
+    while i<=#bs do
         local n = utf8bytes(bs,i)
         if n == 0 then
             return nil

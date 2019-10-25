@@ -169,6 +169,7 @@ local function chat_message_filter(chatFrame, event, message,...)
     if not message or string.len(message)==0 then
         return false
     end
+
     --fullname, a, b, shortname, d, e, chnum, chname, f,line,playerguid,
     local fullname = select(1,...)
     local shortname = select(4,...)
@@ -176,6 +177,7 @@ local function chat_message_filter(chatFrame, event, message,...)
     local chname = select(8,...)
     local line = select(10,...)
     local playerguid = select(11,...)
+
     if playerguid == bfwf_g_data.myid then
         return false
     end
@@ -298,11 +300,6 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false,message,...
     end
     return false
-end
-
-bfwf_chat_filter_init = function()
-    ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', chat_message_filter)
-    bfwf_update_icon()
 end
 
 bfwf_toggle_bf_filter = function()
