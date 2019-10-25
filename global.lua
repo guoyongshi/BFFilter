@@ -9,9 +9,9 @@ bfwf_big_foot_world_channel_joined = false
 bfwf_dungeons = {
     {name='怒焰裂谷(13 ~ 18)',num=5,lmin=13,lmax=18,sel=true,keys={'ny','怒焰'}},
     {name='哀嚎洞穴(17 ~ 24)',num=5,lmin=17,lmax=24,sel=true,keys={'ah','哀嚎洞穴','哀嚎'}},
-    {name='死亡矿井(17 ~ 26)',num=5,lmin=17,lmax=26,sel=true,keys={'swkj','矿井','SK','死矿'}},
+    {name='死亡矿井(17 ~ 26)',num=5,lmin=17,lmax=26,sel=true,keys={'sw','矿井','SK','死矿'}},
     {name='影牙城堡(22 ~ 30)',num=5,lmin=22,lmax=30,sel=true,keys={'yy','影牙'}},
-    {name='黑暗深渊(24 ~ 32)',num=5,lmin=24,lmax=32,sel=true,keys={'hasy','黑暗深渊'}},
+    {name='黑暗深渊(24 ~ 32)',num=5,lmin=24,lmax=32,sel=true,keys={'sy','黑暗深渊'}},
     {name='监狱(24 ~ 32)',num=5,lmin=24,lmax=32,sel=true,keys={'jy','监狱'}},
     {name='诺莫瑞根(29 ~ 38)',num=5,lmin=29,lmax=38,sel=true,keys={'nmrg','诺莫瑞根','矮子本','矮人本','矮人副本','矮子副本'}},
     {name='剃刀沼泽(29 ~ 38)',num=5,lmin=29,lmax=38,sel=true,keys={'tdzz','剃刀沼泽'}},
@@ -28,11 +28,11 @@ bfwf_dungeons = {
     {name='通灵学院(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'tl','通灵','学院'}},
     {name='斯坦索姆(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'stsm','斯坦'}},
 
-    {name='祖尔格拉布(团)',num=40,lmin=60,lmax=60,sel=false,keys={'zg','祖格','祖尔格拉布'}},
-    {name='安其拉废墟(团)',num=40,lmin=60,lmax=60,sel=false,keys={'fx','安其拉','废墟'}},
+    {name='祖尔格拉布(团)',num=40,lmin=60,lmax=60,sel=false,keys={'zg','zug','祖格','祖尔格拉布'}},
+    {name='安其拉废墟(团)',num=40,lmin=60,lmax=60,sel=false,keys={'fx','aql','安其拉','废墟'}},
     {name='熔火之心(团)',num=40,lmin=60,lmax=60,sel=false,keys={'mc','熔火之心'}},
-    {name='奥妮克希亚的巢穴(团)',num=40,lmin=60,lmax=60,sel=false,keys={'黑龙','ol','奥妮','巢穴'}},
-    {name='黑翼之巢(团)',num=40,lmin=60,lmax=60,sel=false,keys={'bl','黑翼'}},
+    {name='奥妮克希亚的巢穴(团)',num=40,lmin=60,lmax=60,sel=false,keys={'黑龙MM','奥妮克希亚的巢穴'}},
+    {name='黑翼之巢(团)',num=40,lmin=60,lmax=60,sel=false,keys={'bl','bwl','黑翼'}},
     {name='其拉神殿(团)',num=40,lmin=60,lmax=60,sel=false,keys={'taq','神殿','其拉神'}},
     {name='纳克萨玛斯(团)',num=40,lmin=60,lmax=60,sel=false,keys={'naxx','纳克','萨玛斯'}},
 }

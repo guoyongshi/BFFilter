@@ -61,7 +61,7 @@ local function to_short_name(fullname)
     return name
 end
 
-local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
+local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname,mymsg)
     local add_to_log = true
     for _,m in ipairs(bfwf_chat_team_log) do
         if m.line == line then
@@ -70,7 +70,7 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
         end
     end
 
-    if add_to_log and BFWC_Filter_SavedConfigs.filter_request_to_join and string.find(lmessage,'求组') then
+    if not mymsg and add_to_log and BFWC_Filter_SavedConfigs.filter_request_to_join and string.find(lmessage,'求组') then
         add_to_log = false
     end
 
@@ -178,9 +178,17 @@ local function chat_message_filter(chatFrame, event, message,...)
     local line = select(10,...)
     local playerguid = select(11,...)
 
-    if playerguid == bfwf_g_data.myid then
-        return false
+    if line == last_line_number then
+        if last_return then
+            return true
+        end
+        if last_trim == 0 then
+            return false
+        end
+        return false,last_message,...
     end
+    last_return = false
+    last_line_number = line
 
     --目前尚未发现playerguid取不到的情况
     if not playerguid then
@@ -201,23 +209,17 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false
     end
 
+    local mymsg = (playerguid == bfwf_g_data.myid)
+    if mymsg and not bfwf_orging_team and not bfwf_waiting_job then
+        return false
+    end
+
     if not _chatframe1_origin_addmessage then
         if ChatFrame1 and ChatFrame1.AddMessage then
             _chatframe1_origin_addmessage = ChatFrame1.AddMessage
             ChatFrame1.AddMessage = __chatframe1_new_addmessage
         end
     end
-    if line == last_line_number then
-        if last_return then
-            return true
-        end
-        if last_trim == 0 then
-            return false
-        end
-        return false,last_message,...
-    end
-    last_return = false
-    last_line_number = line
 
     if BFWC_Filter_SavedConfigs.interval>0 then
         local now = GetTime()
@@ -252,7 +254,7 @@ local function chat_message_filter(chatFrame, event, message,...)
     local trim = 0
     local _msg = ''
     last_trim = 0
-    if BFWC_Filter_SavedConfigs.reducemsg then
+    if not BFWC_Filter_SavedConfigs.remain_unchanged_msg then
         trim,_msg = bfwf_trim_message(message)
         last_trim = trim
         if trim>0 then
@@ -270,7 +272,7 @@ local function chat_message_filter(chatFrame, event, message,...)
             for _,k in ipairs(d.keys) do
                 local lk = string.lower(k)
                 if lk:len()>0 and string.find(lmessage,lk) then
-                    add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname)
+                    add_msg_to_team_log(line,message,lmessage,playerguid,fullname,shortname,mymsg)
                     if trim>0 then
                         return false,message,...
                     end
@@ -283,7 +285,7 @@ local function chat_message_filter(chatFrame, event, message,...)
     for _, k in ipairs(BFWC_Filter_SavedConfigs.whitelist) do
         local lk = string.lower(k)
         if lk:len() > 0 and string.find(lmessage, lk) then
-            add_msg_to_team_log(line, message, lmessage, playerguid, fullname, shortname)
+            add_msg_to_team_log(line, message, lmessage, playerguid, fullname, shortname,mymsg)
             if trim>0 then
                 return false,message,...
             end

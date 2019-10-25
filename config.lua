@@ -75,7 +75,8 @@ local function reset_configs()
         player = {},
         dungeons = {},
         white_to_chatframe_color={a=1,r=0.937,g=0.138,b=0.883},
-        blacklist_enable = true
+        blacklist_enable = true,
+        remain_unchanged_msg = false
     }
     BFWC_Filter_SavedConfigs.white_to_chatframe = true
     BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
@@ -242,7 +243,7 @@ local config_options = {
                     type = 'description',
                     name = '|cffbb9e75从v1.0.5开始，为了避免重复造轮子，插件功能以【组队助手】为主，\n\n信息过滤仅作为辅助功能\n\n' ..
                 '黑名单的信息会从【大脚世界频道】和【寻求组队】这两个频道过滤掉。\n\n' ..
-                '白名单信息(包括选中的副本)会从这两个频道提取到【我要找队伍】的列表里\n\n' ..
+                '白名单信息(包括选中的副本)会从这两个频道提取到【找队伍】的列表里\n\n' ..
                 '玩家如果需要频道信息过滤功能，可以用其他频道信息过滤插件。|r\n\n' ..
                 '副本关键词及建议等级不一定准确，欢迎到\n\nhttps://github.com/guoyongshi/BFFilter 或者NGA(maliangys)给我反馈。',
                     order = 1,
@@ -397,8 +398,10 @@ local config_options = {
                     descStyle = 'inline',
                     order = 10.1,
                     width = 'full',
-                    get = function() return BFWC_Filter_SavedConfigs.reducemsg end,
-                    set = function(info,val) BFWC_Filter_SavedConfigs.reducemsg=val end
+                    get = function() return not BFWC_Filter_SavedConfigs.remain_unchanged_msg end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.remain_unchanged_msg=not val
+                    end
                 },
 
                 whiteonly = {
@@ -573,7 +576,7 @@ local config_options = {
             args = {
                 desc1 = {
                     type = 'description',
-                    name = '|cffffd100提示：|r\n  白名单关键词匹配通过的信息将作为组队信息提取到【|cffffd100我要找队伍|r】里\n',
+                    name = '|cffffd100提示：|r\n  白名单关键词匹配通过的信息将作为组队信息提取到【|cffffd100找队伍|r】里\n',
                     order = 1
                 },
 
@@ -819,7 +822,7 @@ local config_options = {
                 },
                 note={
                     type = 'input',
-                    name = '备注、说明(限制30字，文明组队，不要带各种垃圾符号)',
+                    name = '备注、说明(限制30字，文明组队，不要带一长串符号)',
                     multiline = 3,
                     width = 'full',
                     order = 3,
@@ -838,8 +841,8 @@ local config_options = {
                 msg={
                     type = 'description',
                     name = function()
-                        local msg = '自动发送的信息(间隔约15秒)：\n    '
-                        msg = msg .. bfwf_make_team_create_msg(true) .. '\n'
+                        local msg = '自动发送的信息(间隔约15秒)：\n    |cffffc0c0'
+                        msg = msg .. bfwf_make_team_create_msg(true) .. '|r\n'
                         return msg
                     end,
                     order = 3.1,
@@ -858,6 +861,10 @@ local config_options = {
                     func = function()
                         if bfwf_orging_team then
                             bfwf_finish_org_team()
+                            return
+                        end
+                        if not bfwf_big_foot_world_channel_joined then
+                            bfwf_msgbox('你需要先加入 大脚世界频道')
                             return
                         end
                         local idx=BFWC_Filter_SavedConfigs.last_orgteam
@@ -902,6 +909,114 @@ local config_options = {
                             return true
                         end
                         return false
+                    end
+                }
+            }
+        },
+        job = {
+            type = 'group',
+            name = '求职',
+            order = 11,
+            width = 'full',
+            args = {
+                desc1 = {
+                    type = 'description',
+                    name = '发布求职信息(信息自动发布到[|cffcc7832|Hchannel:大脚世界频道|h大脚世界频道|h|r])\n',
+                    order = 1,
+                    width = 'full'
+                },
+                task={
+                    type = 'select',
+                    name = '选择求职意向',
+                    style = 'dropdown',
+                    order = 2,
+                    values = function()
+                        local arr = {'自定义','任务队'}
+                        for _,d in ipairs(bfwf_dungeons) do
+                            local pos,_=string.find(d.name,'%(')
+                            if pos then
+                                table.insert(arr,'|cff0099ff' .. string.sub(d.name,1,pos-1) .. '|r')
+                            else
+                                table.insert(arr,'|cff0099ff' .. d.name .. '|r')
+                            end
+                        end
+                        return arr
+                    end,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.last_job or 1
+                    end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.last_job = val
+                    end
+                },
+                note={
+                    type = 'input',
+                    name = '备注、说明(限制20字，文明求职，不要带一长串符号)',
+                    multiline = 3,
+                    width = 'full',
+                    order = 3,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.last_job_note or ''
+                    end,
+                    set = function(info,val)
+                        local ws=bff_msg_split(val or '')
+                        if #ws>20 then
+                            BFWC_Filter_SavedConfigs.last_job_note = table.concat(ws,'',1,20)
+                        else
+                            BFWC_Filter_SavedConfigs.last_job_note = val or ''
+                        end
+                    end
+                },
+                msg={
+                    type = 'description',
+                    name = function()
+                        local msg = '自动发送的信息(间隔约15秒)：\n    |cffffc0c0'
+                        msg = msg .. bfwf_make_wanted_job_msg(true) .. '|r\n'
+                        return msg
+                    end,
+                    order = 3.1,
+                    width = 'full'
+                },
+                start={
+                    type = 'execute',
+                    order = 4,
+                    name = function()
+                        if bfwf_waiting_job then
+                            return '结束'
+                        else
+                            return '开始'
+                        end
+                    end,
+                    func = function()
+
+                        if bfwf_waiting_job then
+                            bfwf_waiting_job = false
+                            return
+                        end
+                        if not bfwf_big_foot_world_channel_joined then
+                            bfwf_msgbox('你需要先加入 大脚世界频道')
+                            return
+                        end
+                        if GetNumGroupMembers()>0 then
+                            bfwf_msgbox('你现在正在一个队伍里，无法发布求职信息！')
+                            return
+                        end
+                        if bfwf_orging_team then
+                            bfwf_msgbox('你已经发布了组队信息，无法发布求职信息！')
+                            return
+                        end
+                        local idx=BFWC_Filter_SavedConfigs.last_job
+                        if not idx then
+                            bfwf_msgbox('先选择求职意向')
+                            return
+                        end
+                        if string.len(BFWC_Filter_SavedConfigs.last_job_note or '')==0 then
+                            bfwf_msgbox('备注信息不能为空')
+                            return
+                        end
+
+                        bfwf_waiting_job = true
+                        bfwf_send_wanted_job_msg()
                     end
                 }
             }

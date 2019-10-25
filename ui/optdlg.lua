@@ -193,7 +193,7 @@ local function create_pages(pagecontainer,lb)
         { name = 'Gen', text = '通用设置', page = BFFPage_Gen(pagecontainer) },
         { name = 'White', text = '白名单', page = BFFPage_White(pagecontainer) },
         { name = 'Black', text = '黑名单', page = BFFPage_Black(pagecontainer) },
-        { name = 'FindTeam', text = '我要找队伍', page = BFFPage_FindTeam(pagecontainer) }
+        { name = 'FindTeam', text = '找队伍', page = BFFPage_FindTeam(pagecontainer) }
     }
 
     for _,it in ipairs(pages) do
