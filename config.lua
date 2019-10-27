@@ -245,7 +245,8 @@ local config_options = {
                 '黑名单的信息会从【大脚世界频道】和【寻求组队】这两个频道过滤掉。\n\n' ..
                 '白名单信息(包括选中的副本)会从这两个频道提取到【找队伍】的列表里\n\n' ..
                 '玩家如果需要频道信息过滤功能，可以用其他频道信息过滤插件。|r\n\n' ..
-                '副本关键词及建议等级不一定准确，欢迎到\n\nhttps://github.com/guoyongshi/BFFilter 或者NGA(maliangys)给我反馈。',
+                '副本关键词及建议等级不一定准确，欢迎到\n\nhttps://github.com/guoyongshi/BFFilter 或者NGA(maliangys)给我反馈。\n\n' ..
+                '|cffffd100当前版本：'.. (GetAddOnMetadata('BFFilter','Version') or '??') .. '|r',
                     order = 1,
                 },
             }
@@ -526,6 +527,18 @@ local config_options = {
                         chatframe:AddMessage(msg)
                     end,
                     hidden = function() return not BFWC_Filter_SavedConfigs.enable_debug end
+                },
+                blacklist_to_all_channel = {
+                    type = 'toggle',
+                    name = '黑名单过滤所有频道以及“说”、“大喊”',
+                    width = 'full',
+                    order = 16,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.blacklist_to_all_channel~=false
+                    end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.blacklist_to_all_channel = val
+                    end
                 }
             }
         },

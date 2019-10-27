@@ -205,7 +205,16 @@ local function chat_message_filter(chatFrame, event, message,...)
     end
 
     --一些整合插件会把频道名过滤成简称
-    if not string.find(chname,'世') and not string.find(chname,'组') then
+    --大脚：
+    local filter_it = false
+    local black_to_all = false
+    if chname=='世' or chname=='寻' or chname=='大脚世界频道' or chname=='寻求组队' then
+        filter_it = true
+    elseif BFWC_Filter_SavedConfigs.blacklist_enable and BFWC_Filter_SavedConfigs.blacklist_to_all_channel~=false then
+        black_to_all = true
+        filter_it = true
+    end
+    if not filter_it then
         return false
     end
 
@@ -248,6 +257,10 @@ local function chat_message_filter(chatFrame, event, message,...)
                 last_return = true
                 return true
             end
+        end
+        if black_to_all then
+            last_return = false
+            return false
         end
     end
 
@@ -304,8 +317,26 @@ local function chat_message_filter(chatFrame, event, message,...)
     return false
 end
 
+local function say_yell_Filter(self,event,message,...)
+    if BFWC_Filter_SavedConfigs.blacklist_to_all_channel==false then
+        return
+    end
+    if BFWC_Filter_SavedConfigs.blacklist_enable then
+        local lmessage = string.lower(message)
+        for _,k in ipairs(BFWC_Filter_SavedConfigs_G.blacklist) do
+            local lk = string.lower(k)
+            if lk:len()>0 and string.find(lmessage,lk) then
+                return true
+            end
+        end
+    end
+    return false
+end
 bfwf_chat_filter_init = function()
     ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', chat_message_filter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", say_yell_Filter)
+    ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", say_yell_Filter)
+
     bfwf_update_icon()
 end
 
