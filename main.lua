@@ -94,6 +94,7 @@ function BFFilter:OnCheck()
 end
 
 local bf_channel_num
+local try_auto_join = 0
 function BFFilter:CheckBigFootChannel()
     local channels = { GetChannelList() }
     for i,k in ipairs(channels) do
@@ -106,6 +107,12 @@ function BFFilter:CheckBigFootChannel()
 
     bfwf_big_foot_world_channel_joined = false
     if BFWC_Filter_SavedConfigs.autojoin_bigfoot then
+        if try_auto_join>3 then
+            --大脚世界频道的有可能被捣乱加上密码
+            BFWC_Filter_SavedConfigs.autojoin_bigfoot = false
+            try_auto_join = 0
+            return
+        end
         local chatframe = DEFAULT_CHAT_FRAME
         if not chatframe then
             chatframe = ChatFrame1
@@ -114,6 +121,7 @@ function BFFilter:CheckBigFootChannel()
         if chatframe and chatframe.GetID then
             id = ChatFrame1:GetID()
         end
+        try_auto_join = try_auto_join + 1
         JoinPermanentChannel('大脚世界频道',nil,id)
         ChatFrame_AddChannel(DEFAULT_CHAT_FRAME, '大脚世界频道')
     end
