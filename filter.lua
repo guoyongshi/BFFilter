@@ -189,6 +189,8 @@ local function chat_message_filter(chatFrame, event, message,...)
     end
     last_return = false
     last_line_number = line
+    last_trim = 0
+    last_message = message
 
     --目前尚未发现playerguid取不到的情况
     if not playerguid then
@@ -266,7 +268,6 @@ local function chat_message_filter(chatFrame, event, message,...)
 
     local trim = 0
     local _msg = ''
-    last_trim = 0
     if not BFWC_Filter_SavedConfigs.remain_unchanged_msg then
         trim,_msg = bfwf_trim_message(message)
         last_trim = trim
@@ -279,7 +280,6 @@ local function chat_message_filter(chatFrame, event, message,...)
         end
     end
 
-    last_message = message
     for _,d in ipairs(bfwf_dungeons) do
         if BFWC_Filter_SavedConfigs.dungeons[d.name] then
             for _,k in ipairs(d.keys) do
