@@ -277,8 +277,10 @@ local function chat_message_filter(chatFrame, event, message,...)
             else
                 message = _msg
             end
+            last_message = message
         end
     end
+
 
     for _,d in ipairs(bfwf_dungeons) do
         if BFWC_Filter_SavedConfigs.dungeons[d.name] then
