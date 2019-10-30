@@ -209,7 +209,7 @@ local function chat_message_filter(chatFrame, event, message,...)
     --一些整合插件会把频道名过滤成简称
     --大脚：
     local filter_it = false
-    local black_to_all = false
+    local black_to_all = false  --黑名单过滤其它频道
     if chname=='世' or chname=='寻' or chname=='大脚世界频道' or chname=='寻求组队' then
         filter_it = true
     elseif BFWC_Filter_SavedConfigs.blacklist_enable and BFWC_Filter_SavedConfigs.blacklist_to_all_channel~=false then
@@ -260,11 +260,25 @@ local function chat_message_filter(chatFrame, event, message,...)
                 return true
             end
         end
+        if BFWC_Filter_SavedConfigs.not_sel_dungeons_as_blacklist then
+            for _,d in ipairs(bfwf_dungeons) do
+                if not BFWC_Filter_SavedConfigs.dungeons[d.name] then
+                    for _,k in ipairs(d.keys) do
+                        local lk = string.lower(k)
+                        if lk:len()>0 and string.find(lmessage,lk) then
+                            last_return = true
+                            return true
+                        end
+                    end
+                end
+            end
+        end
         if black_to_all then
             last_return = false
             return false
         end
     end
+
 
     local trim = 0
     local _msg = ''

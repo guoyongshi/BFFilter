@@ -608,6 +608,16 @@ local config_options = {
                         BFWC_Filter_SavedConfigs.whitelist = bfwf_split_str(val) or {}
                     end
                 },
+                unsel_as_black = {
+                    type = 'toggle',
+                    name = '|cffee0e00未勾选的副本当成黑名单|r|cffffee00(如果您不明白该选项的用途，不要勾选)|r',
+                    order = 2.1,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.not_sel_dungeons_as_blacklist end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.not_sel_dungeons_as_blacklist = val
+                    end
+                },
                 autosel = {
                     type = 'toggle',
                     name = '根据我的等级自动过滤组队信息！',
@@ -622,7 +632,7 @@ local config_options = {
                 },
                 desc2 = {
                     type = 'description',
-                    name = '\n手动选择关心的副本组队信息\n中括号内文字是预设的关键字，如果不能满足需求可自行添加白名单关键词。',
+                    name = '\n手动选择关心的副本组队信息\n|cffffee00中括号内文字是预设的关键字，如果不能满足需求可在上方编辑框自行添加白名单关键词。|r',
                     order = 4,
                     width = 'full'
                 }
