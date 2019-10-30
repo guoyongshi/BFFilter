@@ -477,6 +477,7 @@ local config_options = {
                     order = 14.1,
                     width=0.75,
                     hasAlpha = true,
+                    disabled = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
                     get = function()
                         local r,g,b,a
                         r = BFWC_Filter_SavedConfigs.white_to_chatframe_color.r or 1
@@ -496,38 +497,22 @@ local config_options = {
                     end
                 },
 
+                txcolor = {
+                    type = 'toggle',
+                    name = '文字用职业颜色',
+                    order = 14.2,
+                    get = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.use_class_color_for_text=val end
+                },
+
                 flash = {
                     type = 'toggle',
                     name = '新信息提醒',
-                    order = 14.2,
+                    order = 14.3,
                     get = function() return BFWC_Filter_SavedConfigs.new_msg_flash end,
                     set = function(info,val) BFWC_Filter_SavedConfigs.new_msg_flash=val end
                 },
-                test = {
-                    type = 'execute',
-                    name = '测试',
-                    order = 15,
-                    width = 'half',
-                    func = function()
-                        if not BFWC_Filter_SavedConfigs.white_to_chatframe_num then
-                            return
-                        end
 
-                        local chatframe = _G['ChatFrame' .. BFWC_Filter_SavedConfigs.white_to_chatframe_num]
-                        if not chatframe then
-                            return
-                        end
-
-                        local color = 'fff137ea'
-                        if BFWC_Filter_SavedConfigs.white_to_chatframe_color and BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex then
-                            color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
-                        end
-                        local msg = '|cff11d72a[|Hplayer:牛夫人|h牛夫人|h]:|r'
-                        msg = msg .. '|c' .. color .. 'abcd|r'
-                        chatframe:AddMessage(msg)
-                    end,
-                    hidden = function() return not BFWC_Filter_SavedConfigs.enable_debug end
-                },
                 blacklist_to_all_channel = {
                     type = 'toggle',
                     name = '黑名单过滤所有频道以及“说”、“大喊”',

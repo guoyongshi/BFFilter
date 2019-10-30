@@ -1,4 +1,5 @@
 
+local timer = LibStub('AceTimer-3.0')
 local last_show_message = {
 
 }
@@ -29,17 +30,20 @@ local function add_msgto_chatframe(name,msg)
         BFWC_Filter_SavedConfigs.white_to_chatframe_num = num
     end
 
-    local color = BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
+    local color = '|c' .. BFWC_Filter_SavedConfigs.white_to_chatframe_color.hex
     local tlcolor = bfwf_player_color[name]
     if not tlcolor then
         tlcolor = '|cff11d72a'
     end
 
+    if BFWC_Filter_SavedConfigs.use_class_color_for_text then
+        color = tlcolor
+    end
     local h,m=GetGameTime()
     local s = math.floor(GetTime()%60)
     local _msg = string.format('|cff189694%.2d:%.2d:%.2d|r',h,m,s)
     _msg = _msg ..'|Hplayer:' .. name .. '|h[' .. tlcolor .. name .. '|r]|h:'
-    _msg = _msg .. '|c' .. color .. msg .. '|r'
+    _msg = _msg .. color .. msg .. '|r'
     chatframe:AddMessage(_msg)
 
     if BFWC_Filter_SavedConfigs.new_msg_flash then
@@ -81,7 +85,12 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     if not shortname then
         shortname = to_short_name(fullname)
     end
-    add_msgto_chatframe(shortname,message)
+    if bfwf_player_color[shortname] or not timer then
+        add_msgto_chatframe(shortname,message)
+    else
+        --职业颜色没缓存好，延迟0.1秒(filter在AddMessage之前执行)
+        timer:ScheduleTimer(add_msgto_chatframe,0.1,shortname,message)
+    end
     local idx = 0
     dirty = true
     for i = 1, #bfwf_chat_team_log do
@@ -348,8 +357,23 @@ local function say_yell_Filter(self,event,message,...)
     end
     return false
 end
+local function filter_proxy(...)
+    local now = GetTime()
+    local ret,msg,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13 = chat_message_filter(...)
+    local dt = GetTime()-now
+    if not msg then
+        return ret
+    end
+    return ret,msg .. dt,arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12,arg13
+end
+
 bfwf_chat_filter_init = function()
-    ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', chat_message_filter)
+    if BFWC_Filter_SavedConfigs.enable_debug then
+        ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', filter_proxy)
+    else
+        ChatFrame_AddMessageEventFilter('CHAT_MSG_CHANNEL', chat_message_filter)
+    end
+
     ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", say_yell_Filter)
     ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", say_yell_Filter)
 
