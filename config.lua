@@ -964,7 +964,7 @@ local config_options = {
                 },
                 note={
                     type = 'input',
-                    name = '备注、说明(限制20字，文明求职，不要带一长串符号)',
+                    name = '备注、说明(限制30字，文明求职，不要带一长串符号)',
                     multiline = 3,
                     width = 'full',
                     order = 3,
@@ -973,8 +973,8 @@ local config_options = {
                     end,
                     set = function(info,val)
                         local ws=bff_msg_split(val or '')
-                        if #ws>20 then
-                            BFWC_Filter_SavedConfigs.last_job_note = table.concat(ws,'',1,20)
+                        if #ws>30 then
+                            BFWC_Filter_SavedConfigs.last_job_note = table.concat(ws,'',1,30)
                         else
                             BFWC_Filter_SavedConfigs.last_job_note = val or ''
                         end

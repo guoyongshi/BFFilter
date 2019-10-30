@@ -182,6 +182,11 @@ bfwf_make_team_create_msg = function(avoid_kick)
         name = bfwf_dungeons[idx-2].name
     end
 
+    local keys = bfwf_dungeons[idx-2].keys
+    if keys and keys[1] and keys[1]~=name then
+        name = name .. ',' .. string.upper(keys[1])
+    end
+
     msg = '[' .. name .. '],' .. orig_msg
     return msg
 end
@@ -220,6 +225,10 @@ bfwf_make_wanted_job_msg = function(avoid_kick)
         name = string.sub(bfwf_dungeons[idx-2].name,1,pos-1)
     else
         name = bfwf_dungeons[idx-2].name
+    end
+    local keys = bfwf_dungeons[idx-2].keys
+    if keys and keys[1] and keys[1]~=name then
+        name = name .. ',' .. string.upper(keys[1])
     end
 
     msg = '[' .. name .. '],' .. orig_msg
