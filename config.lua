@@ -549,7 +549,7 @@ local config_options = {
             order = 2,
             width = 0.5,
             disabled = function(info)
-                return not BFWC_Filter_SavedConfigs.enable or not BFWC_Filter_SavedConfigs.blacklist_enable
+                return not BFWC_Filter_SavedConfigs.enable
             end,
             args = {
                 enable = {
