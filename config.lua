@@ -35,7 +35,7 @@ local function blacklist_init()
         BFWC_Filter_SavedConfigs.blacklist = nil
     else
         BFWC_Filter_SavedConfigs_G.blacklist = {
-            '/组','一组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
+            '一组','/组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
             'VX','免费','ZFB','收G'
         }
     end
