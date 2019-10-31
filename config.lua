@@ -516,7 +516,9 @@ local config_options = {
 
                 blacklist_to_all_channel = {
                     type = 'toggle',
-                    name = '黑名单过滤所有频道以及“说”、“大喊”',
+                    name = '黑名单过滤所有通用频道以及“说”、“大喊”',
+                    desc = '(不含小队、团队、公会、私聊)',
+                    descStyle='inline',
                     width = 'full',
                     order = 16,
                     get = function()
