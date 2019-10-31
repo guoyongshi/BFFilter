@@ -36,7 +36,8 @@ local function blacklist_init()
     else
         BFWC_Filter_SavedConfigs_G.blacklist = {
             '一组','/组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
-            'VX','免费','ZFB','收G'
+            'VX','免费','ZFB','收G','无限收','大米','小米','G收','全区服','内销',
+            'G团'
         }
     end
 
