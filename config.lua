@@ -21,25 +21,11 @@ local function blacklist_init()
     end
 
     BFWC_Filter_SavedConfigs.blacklist_enable = true
-    if BFWC_Filter_SavedConfigs.blacklist then
-        if BFWC_Filter_SavedConfigs_G.blacklist then
-            for _,k in ipairs(BFWC_Filter_SavedConfigs.blacklist) do
-                if not is_exists(BFWC_Filter_SavedConfigs_G.blacklist,k) then
-                    table.insert(BFWC_Filter_SavedConfigs_G.blacklist,k)
-                end
-            end
-        else
-            BFWC_Filter_SavedConfigs_G.blacklist = BFWC_Filter_SavedConfigs.blacklist
-        end
-
-        BFWC_Filter_SavedConfigs.blacklist = nil
-    else
-        BFWC_Filter_SavedConfigs_G.blacklist = {
-            '一组','/组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
-            'VX','免费','ZFB','收G','无限收','大米','小米','G收','全区服','内销',
-            'G团'
-        }
-    end
+    BFWC_Filter_SavedConfigs_G.blacklist = {
+        '一组','/组','邮寄','U寄','大量','带价','代价','位面','老板','支付',
+        'VX','免费','ZFB','收G','无限收','大米','小米','G收','全区服','内销',
+        'G团'
+    }
 
 end
 
@@ -59,7 +45,8 @@ end
 
 local reset_width = false
 local reset_height = false
-local function reset_configs()
+
+local function reset_configs_character()
     reset_width = true
     reset_height = true
     BFWC_Filter_SavedConfigs = {
@@ -83,8 +70,6 @@ local function reset_configs()
     BFWC_Filter_SavedConfigs.white_to_chatframe_color={a=1,r=0.702,g=0.941,b=0.906,hex='ffb3f0e7'}
     dungeons_init()
     whitelist_init()
-    BFWC_Filter_SavedConfigs_G.blacklist = nil
-    blacklist_init()
 end
 
 StaticPopupDialogs['BFWC_CONFIRM'] = {
@@ -262,7 +247,9 @@ local config_options = {
                     name = '恢复默认设置',
                     order = 1,
                     func = function()
-                        reset_configs()
+                        reset_configs_character()
+                        BFWC_Filter_SavedConfigs_G.blacklist = nil
+                        blacklist_init()
                     end
                 },
 
@@ -1102,10 +1089,12 @@ end
 
 bfwf_configs_init = function()
     if not BFWC_Filter_SavedConfigs or not BFWC_Filter_SavedConfigs.saved then
-        reset_configs()
+        reset_configs_character()
     end
-    whitelist_init()
+
     blacklist_init()
+    whitelist_init()
+
     local args = config_options.args.whitelist.args
 
     if not BFWC_Filter_SavedConfigs.white_to_chatframe_color then
