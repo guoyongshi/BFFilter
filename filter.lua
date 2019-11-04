@@ -219,7 +219,8 @@ local function chat_message_filter(chatFrame, event, message,...)
     --大脚：
     local filter_it = false
     local black_to_all = false  --黑名单过滤其它频道
-    if chname=='世' or chname=='寻' or chname=='大脚世界频道' or chname=='寻求组队' then
+    --大脚世界频道满员时会自动加入大脚世界频道2
+    if chname=='世' or chname=='寻' or string.sub(chname,1,18)=='大脚世界频道' or chname=='寻求组队' then
         filter_it = true
     elseif BFWC_Filter_SavedConfigs.blacklist_enable and BFWC_Filter_SavedConfigs.blacklist_to_all_channel~=false then
         black_to_all = true
