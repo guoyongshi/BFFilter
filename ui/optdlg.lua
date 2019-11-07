@@ -13,7 +13,7 @@ local methods = {
     end,
     ['ShowPage'] = function(self,value)
         self.lb:SelectItem(value)
-        self:OnItemSelected('',value)
+        self:OnItemSelected(value)
     end,
     ['SetTitle'] = function(self,title)
         self.titletext:SetText(title)
@@ -246,12 +246,14 @@ function BFF_OptionsDialog()
     end
 
     lb:SetCallback('OnItemSelected',widget,widget.OnItemSelected)
+    widget.lb = lb
     setmetatable(widget,{__index = BFF_FrameBase})
 
     close1.obj = widget
     close2.obj = widget
     pagecontainer.obj = widget
 
+    widget:ShowPage('Desc')
     return widget
 end
 

@@ -79,3 +79,6 @@ BFF_FrameBase.SetBackdropBorderColor = function(self,...)
     self.frame:SetBackdropBorderColor(...)
 end
 
+BFF_FrameBase.SetFullWidth=function(self,full)
+    self.full_width = not not full
+end

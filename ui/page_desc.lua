@@ -9,12 +9,19 @@ function BFFPage_Desc(parent)
     cb:SetSize(500,32)
 
     box:AddChild(cb,true)
+
+    local line = BFF_SepLine(parent,'华丽分隔线')
+    box:AddChild(line,true)
+
     for i=1,30 do
-        local btn = CreateFrame('Button',nil,UIParent,'UIPanelButtonTemplate')
+        local btn = CreateFrame('Button',nil,parent,'UIPanelButtonTemplate')
         btn:SetSize(100,30)
         btn:SetText('按钮'..i)
 
         box:AddChild(btn)
+
+        line = BFF_SepLine(parent,'华丽分隔线' .. i)
+        box:AddChild(line,true)
     end
 
     box.OnPageResize = onPageResize

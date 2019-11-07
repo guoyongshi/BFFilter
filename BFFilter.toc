@@ -20,6 +20,7 @@ minimap.lua
 draghandle.lua
 
 ui/framebase.lua
+ui/line.lua
 ui/layout_list.lua
 ui/checkbox.lua
 ui/listbox.lua

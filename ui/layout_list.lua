@@ -23,12 +23,13 @@ local methods = {
     end,
     ['DoLayout'] = function(self,width,height)
         local pre
+        local vspace = self.vspace or 0
         for i=1,#self.children do
             local child = self.children[i]
             if i==1 then
                 child:SetPoint('TOPLEFT',10,-10)
             else
-                child:SetPoint('TOPLEFT',pre,'BOTTOMLEFT',0,-5)
+                child:SetPoint('TOPLEFT',pre,'BOTTOMLEFT',0,-5-vspace)
             end
 
             if child.full_width and width then
@@ -36,12 +37,17 @@ local methods = {
             end
             pre = child.frame or child
         end
+    end,
+    ['SetVSpace'] = function(self,vspace)
+        self.vspace = tonumber(vspace)
+        self:DoLayout()
     end
 }
 
 local function onFrameSizeChanged(container)
     local w = container:GetWidth()
     local h = container:GetHeight()
+    container.obj:DoLayout()
 end
 function BFF_ListLayout(parent)
     local scroll = CreateFrame('ScrollFrame',nil,parent,'UIPanelScrollFrameTemplate')
@@ -77,7 +83,8 @@ function BFF_ListLayout(parent)
     setmetatable(widget,{__index = BFF_FrameBase})
 
     scroll:HookScript('OnShow',function(self,...)
-        self.obj:DoLayout()
+        --此时取出来的宽度是nil
+        --self.obj:DoLayout()
     end)
 
     scroll.obj = widget
