@@ -126,7 +126,7 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     end
 end
 
-local _chatframe1_origin_addmessage
+local _chatframex_origin_addmessage
 
 local function get_name_color(msg)
     local pos1,pos2=string.find(msg,'\124Hplayer:')
@@ -152,13 +152,13 @@ local function get_name_color(msg)
 
     return name,color
 end
-local function __chatframe1_new_addmessage(chatframe,msg,...)
+local function __chatframex_new_addmessage(chatframe,msg,...)
     local name,color = get_name_color(msg)
     if name and color then
         bfwf_player_color[name] = color
     end
 
-    _chatframe1_origin_addmessage(chatframe,msg,...)
+    _chatframex_origin_addmessage(chatframe,msg,...)
 end
 
 --返回true拦截，false放行
@@ -242,10 +242,22 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false
     end
 
-    if not _chatframe1_origin_addmessage then
-        if ChatFrame1 and ChatFrame1.AddMessage then
-            _chatframe1_origin_addmessage = ChatFrame1.AddMessage
-            ChatFrame1.AddMessage = __chatframe1_new_addmessage
+    if not _chatframex_origin_addmessage then
+        for i=1,10 do
+            if _chatframex_origin_addmessage then
+                break
+            end
+            local cf = _G['ChatFrame'..i]
+            if cf and cf.GetID and cf.AddMessage then
+                local chns = {GetChatWindowChannels(cf:GetID() or 1)}
+                for _,v in ipairs(chns) do
+                    if bfwf_start_whith(v,'大脚世界频道') then
+                        _chatframex_origin_addmessage = cf.AddMessage
+                        cf.AddMessage = __chatframex_new_addmessage
+                        break
+                    end
+                end
+            end
         end
     end
 

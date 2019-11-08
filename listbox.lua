@@ -149,10 +149,62 @@ local item_methods = {
 
     ['SetItem'] = function(self,text,data,hilight)
         self.label:SetText(text)
+        self.msg = text
         self.itemdata = data
         self:SetSelected(hilight)
     end
 }
+
+local function getAnchors(frame)
+    local x, y = frame:GetCenter()
+    if not x or not y then return "CENTER" end
+    local hhalf = (x > UIParent:GetWidth()*2/3) and "RIGHT" or (x < UIParent:GetWidth()/3) and "LEFT" or ""
+    local vhalf = (y > UIParent:GetHeight()/2) and "TOP" or "BOTTOM"
+    return vhalf..hhalf, frame, (vhalf == "TOP" and "BOTTOM" or "TOP")..hhalf
+end
+
+local function ShowTooltip(self,show,text)
+    if not self or not GameTooltip then
+        return
+    end
+
+    if not show then
+        GameTooltip:Hide()
+        return
+    end
+
+    GameTooltip:SetOwner(self.frame, "ANCHOR_NONE")
+    GameTooltip:SetPoint(getAnchors(self.frame))
+
+    GameTooltip:ClearLines()
+    GameTooltip:AddLine(text,1,1,1,1,true)
+
+    GameTooltip:Show()
+end
+
+local function onMouseEnter(btn)
+    if not btn then
+        return
+    end
+
+    local w = btn:GetWidth()
+    if not w then
+        return
+    end
+
+    local label = btn.obj.label
+    if not label then
+        return
+    end
+
+    if label:GetStringWidth()>w then
+        ShowTooltip(btn.obj,true,btn.obj.msg)
+    end
+end
+
+local function onMouseLeave(btn)
+    ShowTooltip(btn.obj,false)
+end
 
 local function OnItemClick(self,button)
     self.obj.parent:Fire('OnItemSelected',self.obj.itemdata)
@@ -162,6 +214,9 @@ local function ConstructorItem()
     local frame = CreateFrame("Button", nil, UIParent)
     frame:Hide()
     frame:SetScript('OnClick',OnItemClick)
+
+    frame:SetScript('OnEnter',onMouseEnter)
+    frame:SetScript('OnLeave',onMouseLeave)
 
     local itemBackdrop  = {
         bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
@@ -187,7 +242,7 @@ local function ConstructorItem()
         label = label,
         frame = frame,
         border = border,
-        type  = ItemType
+        type  = ItemType,
     }
     for method, func in pairs(item_methods) do
         item[method] = func
