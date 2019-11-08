@@ -98,7 +98,7 @@ local try_auto_join = 0
 function BFFilter:CheckBigFootChannel()
     local channels = { GetChannelList() }
     for i,k in ipairs(channels) do
-        if k == '大脚世界频道' then
+        if bfwf_start_whith(k,'大脚世界频道') then
             bf_channel_num = channels[i-1]
             bfwf_big_foot_world_channel_joined = true
             return
@@ -296,6 +296,7 @@ bfwf_send_wanted_job_msg = function()
 
     if GetNumGroupMembers()>0 then
         bfwf_waiting_job = false
+        return
     end
 
     local msg = bfwf_make_wanted_job_msg(true)

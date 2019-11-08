@@ -43,6 +43,7 @@ local methods = {
 
     --之前的children已经被清掉
     ['SetList'] = function(self,list)
+        local v = self.scrollbar:GetValue() or 0
         for _,it in ipairs(list) do
             local item = AceGUI:Create('ListBoxItem')
             item:SetItem(it.text,it,it.id==self.selitemid)
@@ -51,7 +52,7 @@ local methods = {
 
         --TODO:滚到恰当位置，保持被选中元素的显示位置
         --value 0~1000
-        --self.scrollbar:SetValue(500)
+        self:SetScroll(v)
     end,
     ['SetLabel'] = function(self,label)
         self.name = label

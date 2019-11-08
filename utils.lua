@@ -71,3 +71,11 @@ function bfwf_format_time(s)
 
     return string.format('%d分钟前',math.floor(s/60))
 end
+
+function bfwf_start_whith(s1,s2)
+    if not s1 or not s2 then
+        return false
+    end
+
+    return s2 == string.sub(s1,1,string.len(s2))
+end

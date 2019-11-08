@@ -71,3 +71,5 @@ bfwf_player_color = {}
 bfwf_orging_team = false
 
 bfwf_org_team_count = 40
+
+bfwf_waiting_job = false

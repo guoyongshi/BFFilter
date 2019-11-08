@@ -811,7 +811,10 @@ local config_options = {
                         return arr
                     end,
                     get = function()
-                        return BFWC_Filter_SavedConfigs.last_orgteam or 1
+                        if not BFWC_Filter_SavedConfigs.last_orgteam then
+                            BFWC_Filter_SavedConfigs.last_orgteam = 1
+                        end
+                        return BFWC_Filter_SavedConfigs.last_orgteam
                     end,
                     set = function(info,val)
                         BFWC_Filter_SavedConfigs.last_orgteam = val
@@ -940,7 +943,10 @@ local config_options = {
                         return arr
                     end,
                     get = function()
-                        return BFWC_Filter_SavedConfigs.last_job or 1
+                        if not BFWC_Filter_SavedConfigs.last_job then
+                            BFWC_Filter_SavedConfigs.last_job = 1
+                        end
+                        return BFWC_Filter_SavedConfigs.last_job
                     end,
                     set = function(info,val)
                         BFWC_Filter_SavedConfigs.last_job = val
@@ -1004,8 +1010,10 @@ local config_options = {
                         end
                         local idx=BFWC_Filter_SavedConfigs.last_job
                         if not idx then
-                            bfwf_msgbox('先选择求职意向')
-                            return
+                            idx = 1
+                            BFWC_Filter_SavedConfigs.last_job = 1
+                            --bfwf_msgbox('先选择求职意向')
+                            --return
                         end
                         if string.len(BFWC_Filter_SavedConfigs.last_job_note or '')==0 then
                             bfwf_msgbox('备注信息不能为空')
