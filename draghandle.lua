@@ -62,8 +62,8 @@ function draghandle_prototype:Init()
     else
         self.icon:SetTexture('Interface/AddOns/BFFilter/texture/pause')
     end
-	self.icon:SetPoint("TOPLEFT", self, "TOPLEFT",12,-12)
-	self.icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT",-12,12)
+	self.icon:SetPoint("TOPLEFT", self, "TOPLEFT",6,-6)
+	self.icon:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT",-6,6)
 	self.icon:SetAlpha(0.5)
     self.icon:Show()
 
@@ -74,7 +74,7 @@ function draghandle_prototype:Init()
 	self:SetScript('OnMouseUp',onMouseUp)
 	self:SetScript('OnEnter',onMouseEnter)
 	self:SetScript('OnLeave',onMouseLeave)
-	self:SetSize(64,64)
+	self:SetSize(32,32)
     self.is_enable = 'x'
     self.tooltip = CreateFrame("GameTooltip", "BFWFDragHandleTooltip", UIParent, "GameTooltipTemplate")
 end
