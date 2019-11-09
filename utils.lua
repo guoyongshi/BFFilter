@@ -77,5 +77,8 @@ function bfwf_start_whith(s1,s2)
         return false
     end
 
+    if type(s1) ~= 'string' or type(s2) ~= 'string' then
+        return false
+    end
     return s2 == string.sub(s1,1,string.len(s2))
 end
