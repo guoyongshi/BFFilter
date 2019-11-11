@@ -97,9 +97,12 @@ end
 local bf_channel_num
 local try_auto_join = 0
 function BFFilter:CheckBigFootChannel()
+    if not DEFAULT_CHAT_FRAME and not ChatFrame1 then
+        return
+    end
     local channels = { GetChannelList() }
     for i,k in ipairs(channels) do
-        if bfwf_start_whith(k,'大脚世界频道') then
+        if k == '大脚世界频道' then
             bf_channel_num = channels[i-1]
             bfwf_big_foot_world_channel_joined = true
             return
@@ -108,7 +111,7 @@ function BFFilter:CheckBigFootChannel()
 
     bfwf_big_foot_world_channel_joined = false
     if BFWC_Filter_SavedConfigs.autojoin_bigfoot then
-        if try_auto_join>3 then
+        if try_auto_join>5 then
             --大脚世界频道的有可能被捣乱加上密码
             BFWC_Filter_SavedConfigs.autojoin_bigfoot = false
             try_auto_join = 0
@@ -278,7 +281,7 @@ bfwf_send_team_create_msg = function()
     end
     local now = GetTime()
     local dt = now-last_team_msg_time
-    if dt<15 then
+    if dt<(BFWC_Filter_SavedConfigs.interval_orgteam or 15) then
         return
     end
     last_team_msg_time = now
@@ -310,7 +313,7 @@ bfwf_send_wanted_job_msg = function()
     end
     local now = GetTime()
     local dt = now-last_wanted_job_time
-    if dt<15 then
+    if dt<(BFWC_Filter_SavedConfigs.interval_wanted_job or 15) then
         return
     end
     last_wanted_job_time = now

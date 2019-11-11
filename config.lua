@@ -838,14 +838,29 @@ local config_options = {
                         end
                     end
                 },
+                space={
+                    type = 'range',
+                    name = '信息发送间隔',
+                    min = 15,
+                    max = 120,
+                    step = 1,
+                    width = 'full',
+                    order = 3.1,
+                    get = function(info)
+                        return BFWC_Filter_SavedConfigs.interval_orgteam or 15
+                    end,
+                    set = function(info, val)
+                        BFWC_Filter_SavedConfigs.interval_orgteam = val
+                    end,
+                },
                 msg={
                     type = 'description',
                     name = function()
-                        local msg = '自动发送的信息(间隔约15秒)：\n    |cffffc0c0'
+                        local msg = '自动发送的信息：\n    |cffffc0c0'
                         msg = msg .. bfwf_make_team_create_msg(true) .. '|r\n'
                         return msg
                     end,
-                    order = 3.1,
+                    order = 3.2,
                     width = 'full'
                 },
                 start={
@@ -970,6 +985,21 @@ local config_options = {
                         end
                     end
                 },
+                space={
+                    type = 'range',
+                    name = '信息发送间隔',
+                    min = 15,
+                    max = 120,
+                    step = 1,
+                    width = 'full',
+                    order = 3.1,
+                    get = function(info)
+                        return BFWC_Filter_SavedConfigs.interval_wanted_job or 15
+                    end,
+                    set = function(info, val)
+                        BFWC_Filter_SavedConfigs.interval_wanted_job = val
+                    end,
+                },
                 msg={
                     type = 'description',
                     name = function()
@@ -977,7 +1007,7 @@ local config_options = {
                         msg = msg .. bfwf_make_wanted_job_msg(true) .. '|r\n'
                         return msg
                     end,
-                    order = 3.1,
+                    order = 3.2,
                     width = 'full'
                 },
                 start={
