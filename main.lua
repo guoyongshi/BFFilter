@@ -163,7 +163,7 @@ function BFFilter:CheckBigFootChannel()
         end
         try_auto_join = try_auto_join + 1
         JoinPermanentChannel('大脚世界频道',nil,id)
-        ChatFrame_AddChannel(DEFAULT_CHAT_FRAME, '大脚世界频道')
+        ChatFrame_AddChannel(chatframe, '大脚世界频道')
     end
 end
 
