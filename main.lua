@@ -1,6 +1,7 @@
 
 --https://github.com/tomrus88/BlizzardInterfaceCode
 local BFFilter=LibStub("AceAddon-3.0"):NewAddon(BFF_ADDON_NAME, "AceConsole-3.0","AceTimer-3.0")
+local cfgreg = LibStub("AceConfigRegistry-3.0")
 
 local function update_player_info()
     local _, class, _ = UnitClass('player')
@@ -92,18 +93,53 @@ function BFFilter:OnCheck()
 
     bfwf_send_team_create_msg()
     bfwf_send_wanted_job_msg()
+
+    if bfwf_update_ui and cfgreg then
+        bfwf_update_ui = false
+        cfgreg:NotifyChange(BFF_ADDON_NAME)
+    end
 end
 
+local function BFFGetJoinedChannels()
+    local chns={}
+    for i=1,10 do
+        local frm=_G['ChatFrame'..i]
+        if frm and frm.GetID then
+            local id = frm:GetID()
+            if id then
+                local arr={GetChatWindowChannels(id)}
+                for j,v in ipairs(arr) do
+                    if type(v)=='string' then
+                        table.insert(chns,v)
+                    end
+                end
+            end
+        end
+    end
+    return chns
+end
+
+local function BFFGetChannelID(chname)
+    local arr={GetChannelList()}
+    for i,k in ipairs(arr) do
+        if k == '大脚世界频道' then
+            return arr[i-1]
+        end
+    end
+    return nil
+end
 local bf_channel_num
 local try_auto_join = 0
 function BFFilter:CheckBigFootChannel()
     if not DEFAULT_CHAT_FRAME and not ChatFrame1 then
         return
     end
-    local channels = { GetChannelList() }
+    if not bf_channel_num then
+        bf_channel_num = BFFGetChannelID('大脚世界频道')
+    end
+    local channels = BFFGetJoinedChannels()
     for i,k in ipairs(channels) do
         if k == '大脚世界频道' then
-            bf_channel_num = channels[i-1]
             bfwf_big_foot_world_channel_joined = true
             return
         end

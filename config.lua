@@ -254,10 +254,9 @@ local config_options = {
 
                 join = {
                     type = 'execute',
-                    name = '加入大脚世界频道|/join 大脚世界频道',
+                    name = '加入大脚世界频道|/join 大脚世界频道\n/script bfwf_update_ui=true',
                     order = 2,
                     func = function()
-
                     end,
                     disabled = function() return bfwf_big_foot_world_channel_joined end,
                     dialogControl = 'MacroButton'
@@ -265,7 +264,7 @@ local config_options = {
 
                 leave = {
                     type = 'execute',
-                    name = '离开大脚世界频道|/leave 大脚世界频道',
+                    name = '离开大脚世界频道|/leave 大脚世界频道\n/script bfwf_update_ui=true',
                     order = 3,
                     func = function()
                         --LeaveChannelByName('大脚世界频道')
@@ -292,6 +291,9 @@ local config_options = {
                     end,
                     set = function(info, val)
                         BFWC_Filter_SavedConfigs.autojoin_bigfoot = val
+                        if val then
+                            bfwf_update_ui = true
+                        end
                     end
                 },
 
@@ -426,80 +428,6 @@ local config_options = {
                     end
                 },
 
-                addtochatframe = {
-                    type = 'toggle',
-                    name = '白名单过滤出来的信息添加到指定聊天窗口',
-                    order = 12,
-                    width = 'full',
-                    get = function() return BFWC_Filter_SavedConfigs.white_to_chatframe end,
-                    set = function(info,val) BFWC_Filter_SavedConfigs.white_to_chatframe=val end
-                },
-
-                chatframe = {
-                    type = 'select',
-                    name = '聊天窗口',
-                    order = 13,
-                    values = function()
-                        local arr = {}
-                        for i=1,NUM_CHAT_WINDOWS do
-                            local name,_=GetChatWindowInfo(i)
-                            if name and string.len(name)>0 then
-                                arr[''..i] = name
-                            end
-                        end
-                        return arr
-                    end,
-                    get = function()
-                        return BFWC_Filter_SavedConfigs.white_to_chatframe_num
-                    end,
-                    set = function(info,val)
-                        BFWC_Filter_SavedConfigs.white_to_chatframe_num=val
-                    end,
-                    disabled = function() return not BFWC_Filter_SavedConfigs.white_to_chatframe end
-                },
-
-                chatcolor = {
-                    type = 'color',
-                    name = '文字颜色',
-                    order = 14.1,
-                    width=0.75,
-                    hasAlpha = true,
-                    disabled = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
-                    get = function()
-                        local r,g,b,a
-                        r = BFWC_Filter_SavedConfigs.white_to_chatframe_color.r or 1
-                        g = BFWC_Filter_SavedConfigs.white_to_chatframe_color.g or 1
-                        b = BFWC_Filter_SavedConfigs.white_to_chatframe_color.b or 1
-                        a = BFWC_Filter_SavedConfigs.white_to_chatframe_color.a or 1
-                        return r,g,b,a
-                    end,
-                    set = function(info,r,g,b,a)
-                        r = r or 1
-                        g = g or 1
-                        b = b or 1
-                        a = a or 1
-                        BFWC_Filter_SavedConfigs.white_to_chatframe_color = {
-                            r=r,g=g,b=b,a=a,hex = hex_color(r,g,b,a)
-                        }
-                    end
-                },
-
-                txcolor = {
-                    type = 'toggle',
-                    name = '文字用职业颜色',
-                    order = 14.2,
-                    get = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
-                    set = function(info,val) BFWC_Filter_SavedConfigs.use_class_color_for_text=val end
-                },
-
-                flash = {
-                    type = 'toggle',
-                    name = '新信息提醒',
-                    order = 14.3,
-                    get = function() return BFWC_Filter_SavedConfigs.new_msg_flash end,
-                    set = function(info,val) BFWC_Filter_SavedConfigs.new_msg_flash=val end
-                },
-
                 blacklist_to_all_channel = {
                     type = 'toggle',
                     name = '黑名单过滤所有通用频道以及“说”、“大喊”',
@@ -594,7 +522,7 @@ local config_options = {
                 },
                 autosel = {
                     type = 'toggle',
-                    name = '根据我的等级自动过滤组队信息！',
+                    name = '根据我的等级自动过滤组队信息！|cffffee00(建议您手动勾选副本，更精确)|r',
                     disabled = function() return not BFWC_Filter_SavedConfigs.enable end,
                     get = function(info) return BFWC_Filter_SavedConfigs.auto_filter_by_level end,
                     set = function(info,val)
@@ -604,6 +532,80 @@ local config_options = {
                     width = 'full',
                     order = 3,
                 },
+                addtochatframe = {
+                    type = 'toggle',
+                    name = '白名单过滤出来的信息添加到指定聊天窗口',
+                    order = 3.1,
+                    width = 'full',
+                    get = function() return BFWC_Filter_SavedConfigs.white_to_chatframe end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.white_to_chatframe=val end
+                },
+
+                chatframe = {
+                    type = 'select',
+                    name = '聊天窗口',
+                    order = 3.2,
+                    values = function()
+                        local arr = {}
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name and string.len(name)>0 then
+                                arr[''..i] = name
+                            end
+                        end
+                        return arr
+                    end,
+                    get = function()
+                        return BFWC_Filter_SavedConfigs.white_to_chatframe_num
+                    end,
+                    set = function(info,val)
+                        BFWC_Filter_SavedConfigs.white_to_chatframe_num=val
+                    end,
+                    disabled = function() return not BFWC_Filter_SavedConfigs.white_to_chatframe end
+                },
+
+                chatcolor = {
+                    type = 'color',
+                    name = '文字颜色',
+                    order = 3.3,
+                    width=0.75,
+                    hasAlpha = true,
+                    disabled = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
+                    get = function()
+                        local r,g,b,a
+                        r = BFWC_Filter_SavedConfigs.white_to_chatframe_color.r or 1
+                        g = BFWC_Filter_SavedConfigs.white_to_chatframe_color.g or 1
+                        b = BFWC_Filter_SavedConfigs.white_to_chatframe_color.b or 1
+                        a = BFWC_Filter_SavedConfigs.white_to_chatframe_color.a or 1
+                        return r,g,b,a
+                    end,
+                    set = function(info,r,g,b,a)
+                        r = r or 1
+                        g = g or 1
+                        b = b or 1
+                        a = a or 1
+                        BFWC_Filter_SavedConfigs.white_to_chatframe_color = {
+                            r=r,g=g,b=b,a=a,hex = hex_color(r,g,b,a)
+                        }
+                    end
+                },
+
+                txcolor = {
+                    type = 'toggle',
+                    name = '文字用职业颜色',
+                    order = 3.4,
+                    get = function() return BFWC_Filter_SavedConfigs.use_class_color_for_text end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.use_class_color_for_text=val end
+                },
+
+                flash = {
+                    type = 'toggle',
+                    name = '新信息提醒',
+                    order = 3.5,
+                    get = function() return BFWC_Filter_SavedConfigs.new_msg_flash end,
+                    set = function(info,val) BFWC_Filter_SavedConfigs.new_msg_flash=val end
+                },
+
                 desc2 = {
                     type = 'description',
                     name = '\n手动选择关心的副本组队信息\n|cffffee00中括号内文字是预设的关键字，如果不能满足需求可在上方编辑框自行添加白名单关键词。|r',

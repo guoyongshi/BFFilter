@@ -73,3 +73,5 @@ bfwf_orging_team = false
 bfwf_org_team_count = 40
 
 bfwf_waiting_job = false
+
+bfwf_update_ui = false

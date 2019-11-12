@@ -1,6 +1,6 @@
 ## Interface: 11302
 ## Title: BFFilter |r|cFF0099FF[组队助手]|r
-## Version: 1.1.9
+## Version: 1.1.10
 ## Notes: Team Assistant
 ## Notes-zhCN: 怀旧服组队助手
 ## SavedVariables: BFWC_Filter_SavedConfigs_G
