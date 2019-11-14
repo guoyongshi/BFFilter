@@ -100,7 +100,7 @@ function BFFilter:OnCheck()
     end
 end
 
-local function BFFGetJoinedChannels()
+function BFFGetJoinedChannels()
     local chns={}
     for i=1,10 do
         local frm=_G['ChatFrame'..i]
@@ -153,17 +153,16 @@ function BFFilter:CheckBigFootChannel()
             try_auto_join = 0
             return
         end
-        local chatframe = DEFAULT_CHAT_FRAME
-        if not chatframe then
-            chatframe = ChatFrame1
-        end
-        local id
-        if chatframe and chatframe.GetID then
-            id = ChatFrame1:GetID()
-        end
+
         try_auto_join = try_auto_join + 1
-        JoinPermanentChannel('大脚世界频道',nil,id)
-        ChatFrame_AddChannel(chatframe, '大脚世界频道')
+        --JoinPermanentChannel只是开启指定频道，过滤器能捕捉到频道信息，但不在聊天窗显示，
+        --要在聊天窗显示需要在聊天窗设置里勾选或者用ChatFrame_AddChannel
+        JoinPermanentChannel('大脚世界频道')
+        JoinPermanentChannel('大脚世界频道1')
+        JoinPermanentChannel('大脚世界频道2')
+        JoinPermanentChannel('大脚世界频道3')
+        JoinPermanentChannel('大脚世界频道4')
+        JoinPermanentChannel('大脚世界频道5')
     end
 end
 

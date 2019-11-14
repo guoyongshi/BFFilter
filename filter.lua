@@ -88,8 +88,8 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     if bfwf_player_color[shortname] or not timer then
         add_msgto_chatframe(shortname,message)
     else
-        --职业颜色没缓存好，延迟0.1秒(filter在AddMessage之前执行)
-        timer:ScheduleTimer(add_msgto_chatframe,0.1,shortname,message)
+        --职业颜色没缓存好，延迟0.3秒(filter在AddMessage之前执行)
+        timer:ScheduleTimer(add_msgto_chatframe,0.3,shortname,message)
     end
     local idx = 0
     dirty = true
@@ -126,7 +126,7 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     end
 end
 
-local _chatframex_origin_addmessage
+local _chatframex_hook_addmessage = false
 
 local function get_name_color(msg)
     local pos1,pos2=string.find(msg,'\124Hplayer:')
@@ -158,7 +158,9 @@ local function __chatframex_new_addmessage(chatframe,msg,...)
         bfwf_player_color[name] = color
     end
 
-    _chatframex_origin_addmessage(chatframe,msg,...)
+    if chatframe._chatframex_origin_addmessage then
+        chatframe._chatframex_origin_addmessage(chatframe,msg,...)
+    end
 end
 
 --返回true拦截，false放行
@@ -242,18 +244,16 @@ local function chat_message_filter(chatFrame, event, message,...)
         return false
     end
 
-    if not _chatframex_origin_addmessage then
+    if not _chatframex_hook_addmessage then
         for i=1,10 do
-            if _chatframex_origin_addmessage then
-                break
-            end
             local cf = _G['ChatFrame'..i]
             if cf and cf.GetID and cf.AddMessage then
                 local chns = {GetChatWindowChannels(cf:GetID() or 1)}
                 for _,v in ipairs(chns) do
                     if bfwf_start_whith(v,'大脚世界频道') then
-                        _chatframex_origin_addmessage = cf.AddMessage
+                        cf._chatframex_origin_addmessage = cf.AddMessage
                         cf.AddMessage = __chatframex_new_addmessage
+                        _chatframex_hook_addmessage = true
                         break
                     end
                 end

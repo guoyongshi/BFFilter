@@ -236,54 +236,134 @@ local config_options = {
                 },
             }
         },
-        common = {
+
+        bfchannels={
             type = 'group',
-            name = '通用设置',
+            name = '大脚世界频道[|cffaa0000重要|r]',
             order = 1.1,
             args = {
-                reset = {
-                    type = 'execute',
-                    name = '恢复默认设置',
-                    order = 1,
-                    func = function()
-                        reset_configs_character()
-                        BFWC_Filter_SavedConfigs_G.blacklist = nil
-                        blacklist_init()
-                    end
-                },
+                desc= {
+                    type = 'description',
+                    name = '|cffffd100说明：本插件依赖于大脚世界频道，不加入大脚世界频道，本插件是无法正常工作的。\n\n' ..
+                            '但不同的服务器，使用的大脚世界频道不太一样，有的是大脚世界频道，有的是大脚世界频道1，有的是大脚世界频道2。。。，或者同时使用多个\n\n' ..
+                            '如果本插件无法自动加入大脚世界频道，请使用下面的宏手动加入\n' ..
+                            '/加入 大脚世界频道\n' ..
+                            '/加入 大脚世界频道1\n' ..
+                            '/加入 大脚世界频道2\n' ..
+                            '/加入 大脚世界频道3\n' ..
+                            '/加入 大脚世界频道4\n' ..
+                            '/加入 大脚世界频道5\n' ..
+                            '或者用下面的按钮尝试加入所有频道|r',
 
-                join = {
+                    order = 1
+                },
+                join={
                     type = 'execute',
-                    name = '加入大脚世界频道|/join 大脚世界频道\n/script bfwf_update_ui=true',
+                    name = '加入大脚世界频道|/加入 大脚世界频道\n/加入 大脚世界频道1\n/加入 大脚世界频道2\n/加入 大脚世界频道3\n/加入 大脚世界频道4\n/加入 大脚世界频道5\n',
                     order = 2,
                     func = function()
                     end,
-                    disabled = function() return bfwf_big_foot_world_channel_joined end,
                     dialogControl = 'MacroButton'
                 },
 
-                leave = {
-                    type = 'execute',
-                    name = '离开大脚世界频道|/leave 大脚世界频道\n/script bfwf_update_ui=true',
+                sp1={
+                    type='description',
+                    name='|cff000001|r',
                     order = 3,
-                    func = function()
-                        --LeaveChannelByName('大脚世界频道')
-                    end,
-                    disabled = function() return not bfwf_big_foot_world_channel_joined end,
-                    dialogControl = 'MacroButton'
+                    width = 'full',
                 },
 
-                desc1 = {
-                    type = 'description',
-                    name = '\n|cffcc0000您现在还未加入|r|cfffed51f大脚世界频道|r|cffcc0000，加入后才能看到大量组队信息!!!|r\n',
-                    hidden = function() return bfwf_big_foot_world_channel_joined end,
-                    width = 'full',
+                desc1={
+                    type='description',
+                    name='选择一个聊天窗口显示大脚世界频道信息(可选)，\n也可以右键点击聊天窗口，选“设置”，再选“通用频道”，手动勾选大脚世界频道\n' ..
+                    '如果必要，可以单独建立一个聊天窗口专门显示大脚世界频道信息',
                     order = 4,
+                    width = 'full',
+                },
+                chatframe = {
+                    type = 'select',
+                    name = '聊天窗口',
+                    order = 4.1,
+                    width = 2,
+                    values = function()
+                        local arr = {}
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name and string.len(name)>0 then
+                                table.insert(arr,name)
+                            end
+                        end
+                        return arr
+                    end,
+                    get = function()
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name and name == BFWC_Filter_SavedConfigs.bigfoot_chatframe_name then
+                                return i
+                            end
+                        end
+                    end,
+                    set = function(info,val)
+                        local name,_=GetChatWindowInfo(val)
+                        BFWC_Filter_SavedConfigs.bigfoot_chatframe_name=name
+
+
+                    end,
+                },
+
+                addto={
+                    type='execute',
+                    name='绑定',
+                    order = 4.2,
+                    width = 'half',
+                    disabled = function()
+                        if not BFWC_Filter_SavedConfigs.bigfoot_chatframe_name then
+                            return true
+                        end
+
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name == BFWC_Filter_SavedConfigs.bigfoot_chatframe_name then
+                                return false
+                            end
+                        end
+
+                        return true
+                    end,
+                    func=function()
+                        local idx
+                        for i=1,NUM_CHAT_WINDOWS do
+                            local name,_=GetChatWindowInfo(i)
+                            if name and name == BFWC_Filter_SavedConfigs.bigfoot_chatframe_name then
+                                idx = i
+                            end
+                        end
+                        if not idx then
+                            return
+                        end
+                        local chatframe = _G['ChatFrame'..idx]
+                        if not chatframe then
+                            return
+                        end
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道')
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道1')
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道2')
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道3')
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道4')
+                        ChatFrame_AddChannel(chatframe, '大脚世界频道5')
+                    end
+                },
+
+                sp2={
+                    type='description',
+                    name='|cff000002|r',
+                    order = 5,
+                    width = 'full',
                 },
 
                 autojoin = {
                     type = 'toggle',
-                    name = '自动加入大脚世界频道',
+                    name = '自动加入大脚世界频道(建议)',
                     order = 6,
                     width = 'full',
                     get = function(info)
@@ -294,6 +374,24 @@ local config_options = {
                         if val then
                             bfwf_update_ui = true
                         end
+                    end
+                },
+            }
+        },
+
+        common = {
+            type = 'group',
+            name = '通用设置',
+            order = 1.2,
+            args = {
+                reset = {
+                    type = 'execute',
+                    name = '恢复默认设置',
+                    order = 1,
+                    func = function()
+                        reset_configs_character()
+                        BFWC_Filter_SavedConfigs_G.blacklist = nil
+                        blacklist_init()
                     end
                 },
 
@@ -444,6 +542,7 @@ local config_options = {
                 }
             }
         },
+
 
         blacklist = {
             type = 'group',
