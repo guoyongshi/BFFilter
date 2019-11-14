@@ -28,6 +28,7 @@ local function blacklist_init()
 
 end
 
+local bf_channels={}
 local function dungeons_init()
     BFWC_Filter_SavedConfigs.dungeons = {}
     if bfwf_player.level and bfwf_player.level>0 and BFWC_Filter_SavedConfigs.auto_filter_by_level then
@@ -894,6 +895,43 @@ local config_options = {
                     order = 1,
                     width = 'full'
                 },
+                chns={
+                    type='select',
+                    name='选择信息发布频道',
+                    order=1.1,
+                    values=function()
+                        bf_channels={}
+                        local _,name,_=GetChannelName('大脚世界频道')
+                        if name then
+                            table.insert(bf_channels,name)
+                        end
+                        for i=1,5 do
+                            local _,name,_=GetChannelName('大脚世界频道'..i)
+                            if name then
+                                table.insert(bf_channels,name)
+                            end
+                        end
+                        return bf_channels
+                    end,
+                    get=function(info)
+                        for i,name in ipairs(bf_channels) do
+                            if name and name == BFWC_Filter_SavedConfigs.send_msg_channel then
+                                return i
+                            end
+                        end
+                    end,
+                    set=function(info,val)
+                        if val<=#bf_channels then
+                            BFWC_Filter_SavedConfigs.send_msg_channel=bf_channels[val]
+                        end
+                    end
+                },
+                sp1={
+                    type = 'description',
+                    name = '|cff000001|r',
+                    order = 1.2,
+                    width = 'full'
+                },
                 task={
                     type = 'select',
                     name = '选择副本',
@@ -983,6 +1021,10 @@ local config_options = {
                             bfwf_msgbox('你需要先加入 大脚世界频道')
                             return
                         end
+                        if not BFWC_Filter_SavedConfigs.send_msg_channel then
+                            bfwf_msgbox('你需要先选择一个信息发送频道')
+                            return
+                        end
                         local idx=BFWC_Filter_SavedConfigs.last_orgteam
                         if not idx then
                             bfwf_msgbox('先选择组队目的')
@@ -1039,6 +1081,43 @@ local config_options = {
                     type = 'description',
                     name = '发布求职信息(信息自动发布到[|cffcc7832|Hchannel:大脚世界频道|h大脚世界频道|h|r])\n',
                     order = 1,
+                    width = 'full'
+                },
+                chns={
+                    type='select',
+                    name='选择信息发布频道',
+                    order=1.1,
+                    values=function()
+                        bf_channels={}
+                        local _,name,_=GetChannelName('大脚世界频道')
+                        if name then
+                            table.insert(bf_channels,name)
+                        end
+                        for i=1,5 do
+                            local _,name,_=GetChannelName('大脚世界频道'..i)
+                            if name then
+                                table.insert(bf_channels,name)
+                            end
+                        end
+                        return bf_channels
+                    end,
+                    get=function(info)
+                        for i,name in ipairs(bf_channels) do
+                            if name and name == BFWC_Filter_SavedConfigs.send_msg_channel then
+                                return i
+                            end
+                        end
+                    end,
+                    set=function(info,val)
+                        if val<=#bf_channels then
+                            BFWC_Filter_SavedConfigs.send_msg_channel=bf_channels[val]
+                        end
+                    end
+                },
+                sp1={
+                    type = 'description',
+                    name = '|cff000001|r',
+                    order = 1.2,
                     width = 'full'
                 },
                 task={
@@ -1129,6 +1208,10 @@ local config_options = {
                         end
                         if not bfwf_big_foot_world_channel_joined then
                             bfwf_msgbox('你需要先加入 大脚世界频道')
+                            return
+                        end
+                        if not BFWC_Filter_SavedConfigs.send_msg_channel then
+                            bfwf_msgbox('你需要先选择一个信息发送频道')
                             return
                         end
                         if GetNumGroupMembers()>0 then

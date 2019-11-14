@@ -120,23 +120,21 @@ function BFFGetJoinedChannels()
 end
 
 local function BFFGetChannelID(chname)
+    if not chname then
+        return nil
+    end
     local arr={GetChannelList()}
     for i,k in ipairs(arr) do
-        if k == '大脚世界频道' then
+        if k == chname then
             return arr[i-1]
         end
     end
     return nil
 end
-local bf_channel_num
+
 local try_auto_join = 0
 function BFFilter:CheckBigFootChannel()
-    if not DEFAULT_CHAT_FRAME and not ChatFrame1 then
-        return
-    end
-    if not bf_channel_num then
-        bf_channel_num = BFFGetChannelID('大脚世界频道')
-    end
+
     local channels = BFFGetJoinedChannels()
     for i,k in ipairs(channels) do
         if k == '大脚世界频道' then
@@ -287,9 +285,14 @@ bfwf_finish_org_team = function()
     if string.len(msg or '')==0 then
         return
     end
+
+
+    local bf_channel_num = BFFGetChannelID(BFWC_Filter_SavedConfigs.send_msg_channel)
+
     if not bf_channel_num then
         return
     end
+
     msg = '[已满员]'..msg
     SendChatMessage(msg,'CHANNEL',nil,bf_channel_num)
 end
@@ -310,6 +313,8 @@ bfwf_send_team_create_msg = function()
     if string.len(msg or '')==0 then
         return
     end
+
+    local bf_channel_num = BFFGetChannelID(BFWC_Filter_SavedConfigs.send_msg_channel)
 
     if not bf_channel_num then
         return
@@ -342,6 +347,8 @@ bfwf_send_wanted_job_msg = function()
     if string.len(msg or '')==0 then
         return
     end
+
+    local bf_channel_num = BFFGetChannelID(BFWC_Filter_SavedConfigs.send_msg_channel)
 
     if not bf_channel_num then
         return
