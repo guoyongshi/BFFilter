@@ -85,11 +85,13 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     if not shortname then
         shortname = to_short_name(fullname)
     end
-    if bfwf_player_color[shortname] or not timer then
-        add_msgto_chatframe(shortname,message)
-    else
-        --职业颜色没缓存好，延迟0.3秒(filter在AddMessage之前执行)
-        timer:ScheduleTimer(add_msgto_chatframe,0.3,shortname,message)
+    if BFWC_Filter_SavedConfigs.white_to_chatframe then
+        if bfwf_player_color[shortname] or not timer then
+            add_msgto_chatframe(shortname,message)
+        else
+            --职业颜色没缓存好，延迟0.3秒(filter在AddMessage之前执行)
+            timer:ScheduleTimer(add_msgto_chatframe,0.3,shortname,message)
+        end
     end
     local idx = 0
     dirty = true
