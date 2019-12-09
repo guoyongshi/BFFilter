@@ -736,6 +736,53 @@ local config_options = {
                         BFWC_Filter_SavedConfigs.filter_request_to_join = val
                     end
                 },
+	            dungeons_filter = {
+		            type = 'select',
+		            name = '地下城',
+		            order = 1.1,
+		            values = function()
+			            local list = { [''] = '无' };
+			            local ds = {};
+			            local lv = bfwf_player.level
+			            for _, d in ipairs(bfwf_dungeons) do
+				            if lv >= d.lmin and lv <= d.lmax then
+					            list[#list + 1] = d.name
+					            ds[#ds + 1] = d;
+				            end
+			            end
+			            BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons = ds;
+			            return list;
+		            end,
+		            get = function(info)
+			            return BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons_filter or ''
+		            end,
+		            set = function(info, val)
+			            if not bfwf_g_data.myid or not BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid] then
+				            return
+			            end
+			            BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons_filter = (val ~= '' and val or nil)
+			            if val and val ~= nil then
+				            bfwf_chat_team_log = {};
+				            for i, m in ipairs(bfwf_chat_team_all_log) do
+					            local j = val;
+					            local dungeon = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons[j];
+					            local find = false;
+					            if not dungeon.keys then
+						            return;
+					            end
+					            for _, key in ipairs(dungeon.keys) do
+						            if string.find(string.lower(m.text), string.lower(key)) then
+							            find = true;
+						            end
+					            end
+					            if find then
+						            table.insert(bfwf_chat_team_log, 1, m)
+					            end
+				            end
+			            end
+		            end,
+	            },
+
                 desc2 = {
                     order = 1.2,
                     type = 'description',
