@@ -77,6 +77,49 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
     if not mymsg and add_to_log and BFWC_Filter_SavedConfigs.filter_request_to_join and string.find(lmessage,'求组') then
         add_to_log = false
     end
+    
+    if BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons_filter then
+        local j = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons_filter;
+        local dungeon = BFWC_Filter_SavedConfigs.player[bfwf_g_data.myid].dungeons[j];
+        local find = false;
+        
+        if not dungeon.keys then
+            return;
+        end
+        for _, key in ipairs(dungeon.keys) do
+            if string.find(string.lower(message), string.lower(key)) then
+                find = true;
+            end
+        end
+        
+        
+        local data = {
+            line = line,
+            playerid = playerguid,
+            fullname = fullname,
+            name = shortname,
+            time = GetTime(),
+            text = message
+        }
+        local idx = 0
+        for i = 1, #bfwf_chat_team_all_log do
+            if bfwf_chat_team_all_log[i].playerid == playerguid then
+                idx = i
+                break
+            end
+        end
+        if idx > 0 then
+            bfwf_chat_team_all_log[idx] = data
+        else
+            table.insert(bfwf_chat_team_all_log, 1, data)
+        end
+        
+        if not find then
+            return
+        end
+    end
+
+
 
     if not add_to_log then
         return

@@ -25,13 +25,18 @@ bfwf_dungeons = {
     {name='黑石塔上层(55 ~ 60)',num=10,lmin=55,lmax=60,sel=true,keys={'黑上','黑石上','黑石塔上'}},
     {name='黑石塔下层(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'黑下','黑石下','黑石塔下'}},
     {name='厄运之槌(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'ey','厄运'}},
+    { name = ' -厄运之槌 东', num = 5, lmin = 55, lmax = 60, sel = true, keys = { '厄运东' } },
+    { name = ' -厄运之槌 西', num = 5, lmin = 55, lmax = 60, sel = true, keys = { '厄运西' } },
+    { name = ' -厄运之槌 北', num = 5, lmin = 55, lmax = 60, sel = true, keys = { '厄运北' } },
     {name='通灵学院(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'tl','通灵','学院'}},
     {name='斯坦索姆(55 ~ 60)',num=5,lmin=55,lmax=60,sel=true,keys={'stsm','斯坦'}},
+    { name = ' -斯坦索姆-血色区', num = 5, lmin = 55, lmax = 60, sel = true, keys = { '血色区' } },
+    { name = ' -斯坦索姆-DK区', num = 5, lmin = 55, lmax = 60, sel = true, keys = { 'DK区', '牵马队' } },
 
     {name='祖尔格拉布(团)',num=40,lmin=60,lmax=60,sel=false,keys={'zg','zug','祖格','祖尔格拉布'}},
     {name='安其拉废墟(团)',num=40,lmin=60,lmax=60,sel=false,keys={'fx','aql','安其拉','废墟'}},
     {name='熔火之心(团)',num=40,lmin=60,lmax=60,sel=false,keys={'mc','熔火之心'}},
-    {name='奥妮克希亚的巢穴(团)',num=40,lmin=60,lmax=60,sel=false,keys={'黑龙MM','黑龙妹妹','奥妮克希亚的巢穴'}},
+    { name = '奥妮克希亚的巢穴(团)', num = 40, lmin = 60, lmax = 60, sel = false, keys = { '黑龙MM', '黑龙妹妹', '奥妮克希亚的巢穴', '黑龙' } },
     {name='黑翼之巢(团)',num=40,lmin=60,lmax=60,sel=false,keys={'bwl','黑翼'}},
     {name='其拉神殿(团)',num=40,lmin=60,lmax=60,sel=false,keys={'taq','神殿','其拉神'}},
     {name='纳克萨玛斯(团)',num=40,lmin=60,lmax=60,sel=false,keys={'naxx','纳克','萨玛斯'}},
@@ -58,6 +63,7 @@ bfwf_update_icon = function()
     bfwf_update_minimap_icon()
 end
 
+bfwf_chat_team_all_log = {}
 bfwf_chat_team_log = {}
 bfwf_chat_task_log = {}
 
