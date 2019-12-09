@@ -113,6 +113,19 @@ local function add_msg_to_team_log(line,message,lmessage,playerguid,fullname,sho
         else
             table.insert(bfwf_chat_team_all_log, 1, data)
         end
+	
+	    if #bfwf_chat_team_all_log > 100 then
+		    local oldid = 0
+		    local oldtime = GetTime()
+		    for i = 1, #bfwf_chat_team_all_log do
+			    if bfwf_chat_team_all_log[i].time < oldtime then
+				    oldid = i
+				    oldtime = bfwf_chat_team_all_log[i].time
+			    end
+		    end
+		    table.remove(bfwf_chat_team_all_log, oldix, 1)
+	    end
+        
         
         if not find then
             return
