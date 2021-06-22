@@ -211,7 +211,7 @@ local function OnItemClick(self,button)
 end
 
 local function ConstructorItem()
-    local frame = CreateFrame("Button", nil, UIParent)
+    local frame = CreateFrame("Button", nil, UIParent, BackdropTemplateMixin and "BackdropTemplate")
     frame:Hide()
     frame:SetScript('OnClick',OnItemClick)
 
@@ -225,7 +225,7 @@ local function ConstructorItem()
         insets = { left = 3, right = 3, top = 5, bottom = 3 }
     }
 
-    local border = CreateFrame("Frame", nil, frame)
+    local border = CreateFrame("Frame", nil, frame, BackdropTemplateMixin and "BackdropTemplate")
     border:SetPoint("TOPLEFT", 0, 0)
     border:SetPoint("BOTTOMRIGHT", 0, 0)
     border:SetBackdrop(itemBackdrop)

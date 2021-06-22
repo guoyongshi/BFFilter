@@ -129,6 +129,9 @@ local function trim_rchars(cs)
         if force then
             lastc = c
             table.insert(_cs,c)
+        elseif string.byte(c)>=48 and string.byte(c)<=57 then --数字不处理
+            lastc = c
+            table.insert(_cs,c)
         elseif lastc=='|' and c=='c' then --颜色表达式(|cffff0000 |r)的处理
             lastc = c
             table.insert(_cs,c)
