@@ -1,4 +1,4 @@
-## Interface: 11302
+## Interface: 20501
 ## Title: BFFilter |r|cFF0099FF[组队助手]|r
 ## Version: 1.1.15
 ## Notes: Team Assistant
